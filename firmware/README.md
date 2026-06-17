@@ -45,7 +45,7 @@ git tag firmware-v1.0.0
 git push origin firmware-v1.0.0
 ```
 
-GitHub Actions builds both board images and attaches them to the release.
+GitHub Actions builds every board with `"firmware.enabled": true` in [boards/registry.json](../boards/registry.json) and attaches the binaries to the release.
 
 Manual test build without tagging: **Actions → Firmware → Run workflow**.
 

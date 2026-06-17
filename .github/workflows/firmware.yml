@@ -10,14 +10,24 @@ permissions:
   contents: write
 
 jobs:
+  list-boards:
+    runs-on: ubuntu-latest
+    outputs:
+      boards: ${{ steps.set-matrix.outputs.boards }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: set-matrix
+        run: |
+          boards=$(python3 scripts/registry.py list | jq -R -s -c 'split("\n") | map(select(length > 0))')
+          echo "boards=${boards}" >> "$GITHUB_OUTPUT"
+
   build:
+    needs: list-boards
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        board:
-          - esp32c3-minitv
-          - esp32c3-round128
+        board: ${{ fromJson(needs.list-boards.outputs.boards) }}
     steps:
       - uses: actions/checkout@v4
 

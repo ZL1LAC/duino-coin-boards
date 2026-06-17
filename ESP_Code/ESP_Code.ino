@@ -63,6 +63,21 @@
   #include "DisplayHal.h"
 #endif
 
+#if defined(LILYGO_T_DECK)
+static bool tdeck_lcd_started = false;
+
+void tdeck_lcd_startup() {
+  if (tdeck_lcd_started) return;
+  tdeck_lcd_started = true;
+  #if defined(SERIAL_PRINTING)
+    Serial.println("LCD: T-Deck init on core 0...");
+    Serial.flush();
+  #endif
+  screen_setup();
+  display_boot();
+}
+#endif
+
 #if !defined(ESP8266) && defined(DISABLE_BROWNOUT)
     #include "soc/soc.h"
     #include "soc/rtc_cntl_reg.h"
@@ -516,9 +531,15 @@ void task1_func(void *) {
       VOID LOOP() {
         job[0]->mine();
 
+        #if defined(LILYGO_T_DECK)
+          tdeck_lcd_startup();
+        #endif
+
         #if defined(DISPLAY_SSD1306) || defined(DISPLAY_16X2) || defined(DISPLAY_ST7789) || defined(DISPLAY_ST7735) || defined(DISPLAY_GC9A01)
            float hashrate_float = (hashrate+hashrate_core_two) / 1000.0;
-           float accept_rate = (accepted_share_count / 0.01 / share_count);
+           float accept_rate = (share_count > 0)
+             ? (accepted_share_count / 0.01f / share_count)
+             : 100.0f;
 
            long millisecs = millis();
            int uptime_secs = int((millisecs / 1000) % 60);
@@ -545,22 +566,7 @@ void task2_func(void *) {
       VOID LOOP() {
         job[1]->mine();
 
-        #if defined(DISPLAY_SSD1306) || defined(DISPLAY_16X2) || defined(DISPLAY_ST7789) || defined(DISPLAY_ST7735) || defined(DISPLAY_GC9A01)
-           float hashrate_float = (hashrate+hashrate_core_two) / 1000.0;
-           float accept_rate = (accepted_share_count / 0.01 / share_count);
-
-           long millisecs = millis();
-           int uptime_secs = int((millisecs / 1000) % 60);
-           int uptime_mins = int((millisecs / (1000 * 60)) % 60);
-           int uptime_hours = int((millisecs / (1000 * 60 * 60)) % 24);
-           String uptime = String(uptime_hours) + "h" + String(uptime_mins) + "m" + String(uptime_secs) + "s";
-
-           float sharerate = share_count / (millisecs / 1000.0);
-
-           display_mining_results(String(hashrate_float, 1), String(accepted_share_count), String(share_count), String(uptime),
-                                  String(node_id), String(difficulty / 100), String(sharerate, 1),
-                                  String(ping), String(accept_rate, 1));
-        #endif
+        // TFT/SPI is not safe from both cores — display updates run on task1 (core 0) only.
       }
     #endif
 }
@@ -615,9 +621,14 @@ void setup() {
     #endif
 
     #if defined(DISPLAY_SSD1306) || defined(DISPLAY_16X2) || defined(DISPLAY_ST7789) || defined(DISPLAY_ST7735) || defined(DISPLAY_GC9A01)
-        screen_setup();
-        display_boot();
-        delay(500);
+        #if !defined(LILYGO_T_DECK)
+          screen_setup();
+          display_boot();
+          delay(500);
+        #elif defined(SERIAL_PRINTING)
+          Serial.println("LCD: deferred until mining task (core 0)");
+          Serial.flush();
+        #endif
     #endif
 
     #if defined(USE_DHT)
@@ -827,7 +838,9 @@ void single_core_loop() {
 
     #if defined(DISPLAY_SSD1306) || defined(DISPLAY_16X2) || defined(DISPLAY_ST7789) || defined(DISPLAY_ST7735) || defined(DISPLAY_GC9A01)
        float hashrate_float = (hashrate+hashrate_core_two) / 1000.0;
-       float accept_rate = (accepted_share_count / 0.01 / share_count);
+       float accept_rate = (share_count > 0)
+         ? (accepted_share_count / 0.01f / share_count)
+         : 100.0f;
 
        long millisecs = millis();
        int uptime_secs = int((millisecs / 1000) % 60);

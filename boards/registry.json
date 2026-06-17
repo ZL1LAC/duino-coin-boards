@@ -1,0 +1,67 @@
+{
+  "boards": [
+    {
+      "id": "esp32c3-minitv",
+      "name": "Spotpear ESP32-C3 1.44\" Mini TV",
+      "mcu": "ESP32-C3",
+      "guide": "boards/esp32c3-minitv/README.md",
+      "features": {
+        "display": "ST7735",
+        "resolution": "128x128",
+        "touch": false
+      },
+      "firmware": {
+        "enabled": true,
+        "esptool_chip": "esp32c3",
+        "fqbn": "esp32:esp32:esp32c3:UploadSpeed=115200,CDCOnBoot=cdc,PartitionScheme=huge_app",
+        "defines_enable": ["DISPLAY_ST7735"],
+        "defines_disable": ["DISPLAY_GC9A01"],
+        "tft_setup": "boards/esp32c3-minitv/ST7735_setup.h",
+        "tft_setup_id": 300,
+        "esp32c3_spi_patch": true
+      }
+    },
+    {
+      "id": "esp32c3-round128",
+      "name": "ESP32-2424S012 round (GC9A01 + touch)",
+      "mcu": "ESP32-C3",
+      "guide": "boards/esp32c3-round128/README.md",
+      "features": {
+        "display": "GC9A01",
+        "resolution": "240x240",
+        "touch": "CST816D"
+      },
+      "firmware": {
+        "enabled": true,
+        "esptool_chip": "esp32c3",
+        "fqbn": "esp32:esp32:esp32c3:UploadSpeed=115200,CDCOnBoot=cdc,PartitionScheme=huge_app",
+        "defines_enable": ["DISPLAY_GC9A01"],
+        "defines_disable": ["DISPLAY_ST7735"],
+        "tft_setup": "boards/esp32c3-round128/GC9A01_setup.h",
+        "esp32c3_spi_patch": true
+      }
+    },
+    {
+      "id": "lilygo-t-deck",
+      "name": "LilyGO T-Deck",
+      "mcu": "ESP32-S3",
+      "guide": "boards/lilygo-t-deck/README.md",
+      "features": {
+        "display": "ST7789",
+        "resolution": "320x240",
+        "touch": "GT911",
+        "keyboard": true
+      },
+      "firmware": {
+        "enabled": false,
+        "esptool_chip": "esp32s3",
+        "fqbn": "esp32:esp32:esp32s3:UploadSpeed=921600,USBMode=hwcdc,CDCOnBoot=cdc,PartitionScheme=huge_app,FlashSize=16M,PSRAM=opi",
+        "defines_enable": ["DISPLAY_ST7789", "LILYGO_T_DECK"],
+        "defines_disable": ["DISPLAY_ST7735", "DISPLAY_GC9A01"],
+        "tft_setup": "boards/lilygo-t-deck/tft_setup.h",
+        "tft_setup_id": 210,
+        "esp32c3_spi_patch": false
+      }
+    }
+  ]
+}

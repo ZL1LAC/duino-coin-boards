@@ -1,4 +1,4 @@
-// Settings.h.example ù copy to Settings.h and edit credentials
+// Settings.h.example ? copy to Settings.h and edit credentials
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
@@ -31,8 +31,8 @@ extern const char PASSWORD[] = "your_wifi_password";
 #define SERIAL_PRINTING
 
 // Edit the line below if you wish to change the serial speed (low values may reduce performance but are less prone to interference)
-#if defined(DISPLAY_ST7735) || defined(DISPLAY_GC9A01)
-  // ESP32-C3 USB-CDC serial is easiest to read at 115200 in the Arduino Serial Monitor
+#if defined(DISPLAY_ST7735) || defined(DISPLAY_GC9A01) || defined(LILYGO_T_DECK)
+  // ESP32 USB-CDC serial is easiest to read at 115200 in the Arduino Serial Monitor
   #define SERIAL_BAUDRATE 115200
 #else
   #define SERIAL_BAUDRATE 500000
@@ -67,13 +67,16 @@ extern const char PASSWORD[] = "your_wifi_password";
 // Uncomment if your device is a Duino BlushyBox device
 // #define BLUSHYBOX
 
-// Uncomment to enable a ST7789 LCD screen, like t-display s3, on a direct bus to display mining info in real time
+// Uncomment to enable a ST7789 LCD screen (LilyGo T-Display S3, LilyGO T-Deck, etc.)
 // #define DISPLAY_ST7789
 
-// Spotpear ESP32-C3 1.44" Mini TV (ST7735 128x128) ù see ST7735_setup.h, DISPLAYS.md
+// LilyGO T-Deck ‚Äî use with DISPLAY_ST7789. See boards/lilygo-t-deck/
+// #define LILYGO_T_DECK
+
+// Spotpear ESP32-C3 1.44" Mini TV (ST7735 128x128) ? see ST7735_setup.h, DISPLAYS.md
 #define DISPLAY_ST7735
 
-// ESP32-C3 1.28" round ESP32-2424S012 (GC9A01 240x240) ù see GC9A01_setup.h, DISPLAYS.md
+// ESP32-C3 1.28" round ESP32-2424S012 (GC9A01 240x240) ? see GC9A01_setup.h, DISPLAYS.md
 // #define DISPLAY_GC9A01
 
 // CST816D touch (2424S012C only). Auto-enabled with DISPLAY_GC9A01; comment out to disable.
@@ -129,12 +132,16 @@ extern const char PASSWORD[] = "your_wifi_password";
     #endif
 #endif
 
-// On ESP32-C3 display boards GPIO11 (flash) / GPIO8 conflict with LED blink ù disabled below.
+// On ESP32-C3 display boards GPIO11 (flash) / GPIO8 conflict with LED blink ? disabled below.
 #if defined(DISPLAY_ST7735)
   #undef LED_BLINKING
 #endif
 
 #if defined(DISPLAY_GC9A01)
+  #undef LED_BLINKING
+#endif
+
+#if defined(LILYGO_T_DECK)
   #undef LED_BLINKING
 #endif
 

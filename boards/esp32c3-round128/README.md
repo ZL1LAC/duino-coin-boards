@@ -2,7 +2,7 @@
 
 Board-specific guide for the **ESP32-2424S012** (GC9A01 240×240 round, optional CST816D touch).
 
-**Project home:** [README.md](../../README.md) · **Other boards:** [DISPLAYS.md](../../docs/DISPLAYS.md)
+**Project home:** [README.md](../../README.md) · **Other boards:** [DISPLAYS.md](../../docs/DISPLAYS.md) · **Testbench:** [testbench/esp32c3-round128/](../../testbench/esp32c3-round128/)
 
 Mining firmware for the **ESP32-2424S012** board (ESP32-C3 + **GC9A01** 240×240 round IPS, ~37 mm).
 

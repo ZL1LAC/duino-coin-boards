@@ -1,20 +1,27 @@
 #!/usr/bin/env bash
 # Generate ESP_Code/Settings.h for a firmware release build.
-# Usage: prepare-settings.sh <esp32c3-minitv|esp32c3-round128>
+# Usage: prepare-settings.sh <board-id from boards/registry.json>
 set -euo pipefail
 
-BOARD="${1:?board profile required}"
+BOARD="${1:?board id required}"
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 OUT="$ROOT/ESP_Code/Settings.h"
 EXAMPLE="$ROOT/ESP_Code/Settings.h.example"
 
 cp "$EXAMPLE" "$OUT"
 
-python3 - "$BOARD" "$OUT" <<'PY'
+python3 - "$BOARD" "$OUT" "$ROOT/boards/registry.json" <<'PY'
+import json
 import re
 import sys
 
-board, path = sys.argv[1], sys.argv[2]
+board_id, path, registry_path = sys.argv[1:4]
+registry = json.load(open(registry_path, encoding="utf-8"))
+entry = next((b for b in registry["boards"] if b["id"] == board_id), None)
+if not entry or not entry.get("firmware", {}).get("enabled"):
+    raise SystemExit(f"board not in registry or firmware not enabled: {board_id}")
+
+fw = entry["firmware"]
 text = open(path, encoding="utf-8", errors="replace").read()
 
 def set_define(name, enabled):
@@ -25,19 +32,13 @@ def set_define(name, enabled):
     else:
         text = re.sub(rf"^#define {name}\s*$", f"// #define {name}", text, flags=re.M)
 
-# Release builds use WiFiManager so users configure after flash.
 set_define("CAPTIVE_PORTAL", True)
-
-if board == "esp32c3-minitv":
-    set_define("DISPLAY_ST7735", True)
-    set_define("DISPLAY_GC9A01", False)
-elif board == "esp32c3-round128":
-    set_define("DISPLAY_ST7735", False)
-    set_define("DISPLAY_GC9A01", True)
-else:
-    raise SystemExit(f"unknown board profile: {board}")
+for name in fw.get("defines_enable", []):
+    set_define(name, True)
+for name in fw.get("defines_disable", []):
+    set_define(name, False)
 
 open(path, "w", encoding="utf-8").write(text)
 PY
 
-echo "Wrote $OUT for profile: $BOARD (CAPTIVE_PORTAL enabled)"
+echo "Wrote $OUT for board: $BOARD (CAPTIVE_PORTAL enabled)"

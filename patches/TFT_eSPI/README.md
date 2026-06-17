@@ -40,7 +40,17 @@ In `Arduino/libraries/TFT_eSPI/Processors/TFT_eSPI_ESP32_C3.h`, after the includ
 
 Also ensure `#include "soc/soc.h"` is present if `DR_REG_SPI2_BASE` is undefined.
 
-## 3. Firmware init
+## 3. ESP32-S3 (LilyGO T-Deck) — `USE_HSPI_PORT`
+
+On **Arduino ESP32 core 3.x**, stock TFT_eSPI can crash in `tft.begin()` with `StoreProhibited` / `EXCVADDR: 0x00000010` (broken FSPI register base). The T-Deck `tft_setup.h` already includes:
+
+```cpp
+#define USE_HSPI_PORT
+```
+
+Re-copy `boards/lilygo-t-deck/tft_setup.h` → `User_Setup.h` after any library update. See [Bodmer/TFT_eSPI#3329](https://github.com/Bodmer/TFT_eSPI/issues/3329).
+
+## 4. Firmware init
 
 | Board | Init in `DisplayHal.h` |
 |-------|-------------------------|

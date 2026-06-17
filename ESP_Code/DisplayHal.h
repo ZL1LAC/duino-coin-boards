@@ -118,6 +118,10 @@
     }
 #endif
 
+#if defined(LILYGO_T_DECK) && defined(DISPLAY_ST7789)
+  #include "TDeckDisplay.h"
+#endif
+
 // ===================================================================== //
 //  ST7735 128x128 support (Spotpear ESP32-C3 1.44" "Mini TV" board)     //
 //  Uses the TFT_eSPI library. The display pins are set via TFT_eSPI's   //
@@ -475,7 +479,21 @@
           lcd.clear();
       #endif
 
-      #if defined(DISPLAY_ST7789)
+      #if defined(DISPLAY_ST7789) && defined(LILYGO_T_DECK)
+        #if defined(SERIAL_PRINTING)
+          Serial.println("LCD: T-Deck init...");
+          Serial.flush();
+        #endif
+        pinMode(TFT_BUTTON_PIN, INPUT_PULLUP);
+        attachInterrupt(digitalPinToInterrupt(TFT_BUTTON_PIN), buttonISR, FALLING);
+        tdeck_display_init(tft, tft_rotation);
+        #if defined(SERIAL_PRINTING)
+          Serial.println("LCD: T-Deck init OK");
+          Serial.flush();
+        #endif
+      #endif
+
+      #if defined(DISPLAY_ST7789) && !defined(LILYGO_T_DECK)
         pinMode(TFT_BUTTON_PIN, INPUT_PULLUP);
         attachInterrupt(digitalPinToInterrupt(TFT_BUTTON_PIN), buttonISR, FALLING);
         tft.begin();

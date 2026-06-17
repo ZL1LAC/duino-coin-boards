@@ -2,7 +2,7 @@
 
 Board-specific guide for the **Spotpear 128×128 ST7735** panel.
 
-**Project home:** [README.md](../../README.md) · **Other boards:** [DISPLAYS.md](../../docs/DISPLAYS.md)
+**Project home:** [README.md](../../README.md) · **Other boards:** [DISPLAYS.md](../../docs/DISPLAYS.md) · **Testbench:** [testbench/esp32c3-minitv/](../../testbench/esp32c3-minitv/)
 
 This firmware is the official Duino-Coin `ESP_Code` fork, set up to mine on the
 Spotpear ESP32-C3 1.44-inch LCD board and show live mining stats on the

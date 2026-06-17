@@ -1,0 +1,39 @@
+// For full miner later — copy to Settings.h, then: .\scripts\sync-testbench-settings.ps1 lilygo-t-deck
+// Bring-up first: use TestConfig.h.example + sync-testbench-test.ps1 -> testbench/GenericTest/GenericTest.ino
+
+#ifndef SETTINGS_H
+#define SETTINGS_H
+
+extern char *DUCO_USER = "your_username";
+extern char *MINER_KEY = "None";
+extern char *RIG_IDENTIFIER = "None";
+extern const char SSID[] = "your_wifi_ssid";
+extern const char PASSWORD[] = "your_wifi_password";
+
+#define SERIAL_PRINTING
+#define SERIAL_BAUDRATE 115200
+#define LWD_TIMEOUT 30000
+
+#define DISPLAY_ST7789
+#define LILYGO_T_DECK
+
+#undef LED_BLINKING
+
+#define SOFTWARE_VERSION "4.3"
+extern unsigned int hashrate = 0;
+extern unsigned int hashrate_core_two = 0;
+extern unsigned int difficulty = 0;
+extern unsigned long share_count = 0;
+extern unsigned long accepted_share_count = 0;
+extern String node_id = "";
+extern String WALLET_ID = "";
+extern unsigned int ping = 0;
+
+#if defined(DISPLAY_ST7789)
+    #include <TFT_eSPI.h>
+    TFT_eSPI tft = TFT_eSPI();
+#endif
+
+IPAddress DNS_SERVER(1, 1, 1, 1);
+
+#endif
