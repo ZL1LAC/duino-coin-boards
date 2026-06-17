@@ -2,7 +2,7 @@
  * Generic board bring-up test — display + serial only (no mining, no WiFi).
  *
  * 1. testbench/<board>/TestConfig.h.example -> TestConfig.h
- * 2. .\scripts\sync-testbench-test.ps1 <board-id>
+ * 2. .\scripts\sync-device.ps1 <device-id> test
  * 3. Copy testbench/<board>/tft_setup.h -> Arduino/libraries/TFT_eSPI/User_Setup.h
  * 4. Open testbench/GenericTest/GenericTest.ino, upload
  */

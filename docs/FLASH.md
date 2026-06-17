@@ -1,6 +1,6 @@
 # Flash pre-built firmware
 
-How to flash **merged** release binaries from [GitHub Releases](https://github.com/ZL1LAC/duino-coin-boards/releases) or a local `firmware/dist/` build.
+How to flash **merged** release binaries from [GitHub Releases](https://github.com/ZL1LAC/duino-coin-devices/releases) or a local `firmware/dist/` build.
 
 Pick the file for your hardware:
 
@@ -9,7 +9,7 @@ Pick the file for your hardware:
 | Spotpear ESP32-C3 1.44" Mini TV (ST7735) | `esp32c3-minitv-merged-flash.bin` |
 | ESP32-2424S012 round (GC9A01) | `esp32c3-round128-merged-flash.bin` |
 
-**Other boards** (T-Deck, T-Deck Pro, Heltec, …): build from source — see [testbench/README.md](../testbench/README.md). No release binary until `firmware.enabled: true` in [boards/registry.json](../boards/registry.json).
+**Other boards** (T-Deck, T-Deck Pro, Heltec, …): build from source — see [testbench/README.md](../testbench/README.md). No release binary until `firmware.enabled: true` in [devices/registry.json](../devices/registry.json).
 
 Release builds enable **captive portal** setup — see [firmware/README.md](../firmware/README.md).
 
@@ -75,7 +75,7 @@ If you need custom `Settings.h` credentials without captive portal:
 | Serial Monitor | **115200** baud, USB CDC On Boot **Enabled** |
 | Mining | Hashrate varies by MCU (e.g. ~16–18 kH/s on ESP32-C3 TFT boards) |
 
-Board-specific troubleshooting: [esp32c3-minitv](../boards/esp32c3-minitv/) · [esp32c3-round128](../boards/esp32c3-round128/)
+Board-specific troubleshooting: [esp32c3-minitv](../devices/esp32c3-minitv/) · [esp32c3-round128](../devices/esp32c3-round128/)
 
 ---
 

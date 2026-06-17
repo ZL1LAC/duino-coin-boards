@@ -2,7 +2,7 @@
 
 Step-by-step for porting Duino-Coin to new hardware. Use this when the board arrives — you do not need every step on day one.
 
-**Quick scaffold:** `bash scripts/new-board.sh <board-id> "<Board Name>"`
+**Quick scaffold:** `bash scripts/new-device.sh <board-id> "<Board Name>"`
 
 ---
 
@@ -24,13 +24,13 @@ Photos of PCB silkscreen, factory demo repo, or AliExpress listing ID help later
 
 ---
 
-## 2. Create the board folder
+## 2. Create the device folder
 
 ```bash
-bash scripts/new-board.sh my-new-board "My New Board Name"
+bash scripts/new-device.sh my-new-board "My New Board Name"
 ```
 
-This creates `boards/my-new-board/` from [`boards/_template/`](../boards/_template/) with:
+This creates `devices/my-new-board/` from [`devices/_template/`](../devices/_template/) with:
 
 - `README.md` — fill in Arduino IDE settings, pins, troubleshooting
 - `tft_setup.h` — TFT_eSPI pin/driver template (skip if headless / OLED-only)
@@ -61,30 +61,30 @@ Headless board (no display): may only need pin/LED fixes in `Settings.h.example`
 
 **Phase 1 — generic test** (display + serial, no mining):
 
-1. `testbench/<board-id>/TestConfig.h.example` → `TestConfig.h`
-2. `scripts/sync-testbench-test.ps1 <board-id>` (or `.sh`)
-3. Apply `tft_setup.h` to TFT_eSPI, open **`testbench/GenericTest/GenericTest.ino`**, upload.
+1. `devices/<device-id>/TestConfig.h.example` → `TestConfig.h`
+2. `scripts/sync-device.ps1 <device-id> test` (or `.sh`)
+3. Apply `tft_setup.h` to TFT_eSPI when applicable, open **`testbench/GenericTest/GenericTest.ino`**, upload.
 
 **Phase 2 — full miner** when the screen works:
 
-1. Edit `testbench/<board-id>/Settings.h` (credentials + display `#define`s).
-2. Run `scripts/sync-testbench-settings.ps1 <board-id>` (or `.sh`).
+1. Edit `devices/<device-id>/Settings.h` (credentials + display `#define`s).
+2. Run `scripts/sync-device.ps1 <device-id> miner` (or `.sh`).
 3. Upload **`ESP_Code/ESP_Code.ino`**.
 
-See [testbench/README.md](../testbench/README.md).
+See [testbench/README.md](../testbench/README.md) and [devices/README.md](../devices/README.md).
 
 ---
 
 ## 4. Register the board
 
-Add an entry to [`boards/registry.json`](../boards/registry.json):
+Add an entry to [`devices/registry.json`](../devices/registry.json):
 
 ```json
 {
   "id": "my-new-board",
   "name": "My New Board",
   "mcu": "ESP32-C3",
-  "guide": "boards/my-new-board/README.md",
+  "guide": "devices/my-new-board/README.md",
   "features": {
     "display": "ST7789",
     "resolution": "240x135",
@@ -105,7 +105,7 @@ Add an entry to [`boards/registry.json`](../boards/registry.json):
       "LILYGO_T_DECK_PRO",
       "HELTEC_WIFI_LORA_32_V2"
     ],
-    "tft_setup": "boards/my-new-board/tft_setup.h",
+    "tft_setup": "devices/my-new-board/tft_setup.h",
     "tft_setup_id": 399,
     "esp32c3_spi_patch": true
   }
@@ -122,7 +122,7 @@ Add an entry to [`boards/registry.json`](../boards/registry.json):
 
 | Task | Location |
 |------|----------|
-| TFT_eSPI pins | `boards/<id>/tft_setup.h` → copy to Arduino `User_Setup.h` |
+| TFT_eSPI pins | `devices/<id>/tft_setup.h` → copy to Arduino `User_Setup.h` |
 | Shared TFT_eSPI copy | `patches/TFT_eSPI/Setup_*.h` (optional duplicate for docs) |
 | ESP32-C3 SPI crash fix | [patches/TFT_eSPI/README.md](../patches/TFT_eSPI/README.md) |
 | Other library fixes | `patches/<library>/` |
@@ -131,10 +131,10 @@ Add an entry to [`boards/registry.json`](../boards/registry.json):
 
 ## 6. Document and list
 
-1. Finish `boards/<id>/README.md` (upload steps, pin table, troubleshooting).
+1. Finish `devices/<id>/README.md` (upload steps, pin table, troubleshooting).
 2. Add a row to the **Boards in this repo** table in [README.md](../README.md).
 3. If it is a TFT board, extend [docs/DISPLAYS.md](DISPLAYS.md).
-4. Optional: `boards/<id>/lopaka/` UI import for [lopaka.app](https://lopaka.app).
+4. Optional: `devices/<id>/lopaka/` UI import for [lopaka.app](https://lopaka.app).
 
 ---
 
@@ -165,7 +165,7 @@ git tag firmware-v1.1.0
 git push origin firmware-v1.1.0
 ```
 
-GitHub Actions builds all enabled boards and attaches `*-merged-flash.bin` to [Releases](https://github.com/ZL1LAC/duino-coin-boards/releases).
+GitHub Actions builds all enabled boards and attaches `*-merged-flash.bin` to [Releases](https://github.com/ZL1LAC/duino-coin-devices/releases).
 
 ---
 
@@ -173,11 +173,11 @@ GitHub Actions builds all enabled boards and attaches `*-merged-flash.bin` to [R
 
 ```
 [ ] Hardware pin map documented
-[ ] boards/<id>/ created (new-board.sh)
+[ ] devices/<id>/ created (new-device.sh)
 [ ] DisplayHal.h / drivers (if needed)
 [ ] Settings.h.example updated
 [ ] tft_setup.h tested with TFT_eSPI
-[ ] boards/registry.json entry
+[ ] devices/registry.json entry
 [ ] README.md + root README table
 [ ] Local upload works
 [ ] registry firmware.enabled = true
@@ -195,6 +195,6 @@ GitHub Actions builds all enabled boards and attaches `*-merged-flash.bin` to [R
 | Headless ESP | Settings + partition only |
 | OLED (SSD1306) | `DISPLAY_SSD1306` + board init (e.g. Heltec Vext) — no TFT_eSPI |
 | E-paper (GDEQ031T10) | `DISPLAY_GDEQ031T10` + GxEPD2 — see T-Deck Pro |
-| Non-ESP | May fork different upstream sketch — still document under `boards/` |
+| Non-ESP | May fork different upstream sketch — still document under `devices/` |
 
-When you know what the next device is, run `new-board.sh` and we can fill in the registry and `DisplayHal` block together.
+When you know what the next device is, run `new-device.sh` and we can fill in the registry and `DisplayHal` block together.

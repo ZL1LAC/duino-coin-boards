@@ -15,7 +15,7 @@ if [[ ! -d "$TFT_DIR" ]]; then
   exit 1
 fi
 
-readarray -t CFG < <(python3 - "$BOARD" "$ROOT/boards/registry.json" <<'PY'
+readarray -t CFG < <(python3 - "$BOARD" "$ROOT/devices/registry.json" <<'PY'
 import json, sys
 board_id, registry_path = sys.argv[1:3]
 entry = next(b for b in json.load(open(registry_path))["boards"] if b["id"] == board_id)

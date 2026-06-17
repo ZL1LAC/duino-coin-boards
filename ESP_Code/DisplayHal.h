@@ -321,7 +321,7 @@
 // ===================================================================== //
 //  ST7735 128x128 support (Spotpear ESP32-C3 1.44" "Mini TV" board)     //
 //  Uses the TFT_eSPI library. The display pins are set via TFT_eSPI's   //
-//  build configuration - see boards/esp32c3-minitv/ST7735_setup.h              //
+//  build configuration - see devices/esp32c3-minitv/tft_setup.h              //
 //  and the README for how to point TFT_eSPI at it.                      //
 // ===================================================================== //
 #if defined(DISPLAY_ST7735)
@@ -433,7 +433,7 @@
 // GC9A01 240x240 round display (ESP32-C3 1.28" ESP32-2424S012 board)    //
 // Same mining UI as Spotpear Mini TV (DISPLAY_ST7735) — Lopaka layout.  //
 // Scaled 128x128 -> 240x240 with side inset for the round visible area. //
-// Driver/pins: boards/esp32c3-round128/GC9A01_setup.h                        //
+// Driver/pins: devices/esp32c3-round128/tft_setup.h                        //
 // ===================================================================== //
 #if defined(DISPLAY_GC9A01)
     #define WHITE       TFT_WHITE
@@ -735,7 +735,7 @@
           Serial.println("LCD: tft.init()...");
           Serial.flush();
         #endif
-        // Tab variant (BLACKTAB) comes from TFT_eSPI User_Setup — see boards/esp32c3-minitv/ST7735_setup.h
+        // Tab variant (BLACKTAB) comes from TFT_eSPI User_Setup — see devices/esp32c3-minitv/tft_setup.h
         tft.init();
         #if defined(SERIAL_PRINTING)
           Serial.println("LCD: init OK");

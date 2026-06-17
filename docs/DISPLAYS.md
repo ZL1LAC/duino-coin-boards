@@ -14,8 +14,8 @@ TFT-specific notes for boards that use `DisplayHal.h`. Other future ports in thi
 | **Shape** | Square (mini TV case) | Circle (37 mm) |
 | **Settings.h** | `#define DISPLAY_ST7735` | `#define DISPLAY_GC9A01` |
 | **TFT_eSPI setup** | `Setup_Spotpear_ESP32C3_144.h` | `Setup_ESP32_2424S012.h` |
-| **Setup reference** | `boards/esp32c3-minitv/ST7735_setup.h` | `boards/esp32c3-round128/GC9A01_setup.h` |
-| **README** | [esp32c3-minitv](../boards/esp32c3-minitv/) | [esp32c3-round128](../boards/esp32c3-round128/) |
+| **Setup reference** | `devices/esp32c3-minitv/tft_setup.h` | `devices/esp32c3-round128/tft_setup.h` |
+| **README** | [esp32c3-minitv](../devices/esp32c3-minitv/) | [esp32c3-round128](../devices/esp32c3-round128/) |
 | **Init** | `tft.init()` (BLACKTAB in User_Settings) | `tft.init()` + backlight GPIO3 |
 | **SPI pins** | SCLK=3, MOSI=4, CS=2, DC=0, RST=5 | SCLK=6, MOSI=7, CS=10, DC=2, RST=-1 |
 | **Touch** | — | CST816D I2C: SDA=4, SCL=5, INT=0, RST=1 |
@@ -75,6 +75,6 @@ Each board folder has a `lopaka/` directory with a TFT_eSPI layout file for [lop
 
 | Board | Display | Driver | Guide |
 |-------|---------|--------|--------|
-| LilyGO T-Deck | ST7789 320×240 | TFT_eSPI | [lilygo-t-deck](../boards/lilygo-t-deck/) |
-| LilyGO T-Deck Pro | GDEQ031T10 e-paper | GxEPD2 | [lilygo-t-deck-pro](../boards/lilygo-t-deck-pro/) |
-| Heltec WiFi LoRa 32 V2 | SSD1306 128×64 | U8g2 | [heltec-wifi-lora-32-v2](../boards/heltec-wifi-lora-32-v2/) |
+| LilyGO T-Deck | ST7789 320×240 | TFT_eSPI | [lilygo-t-deck](../devices/lilygo-t-deck/) |
+| LilyGO T-Deck Pro | GDEQ031T10 e-paper | GxEPD2 | [lilygo-t-deck-pro](../devices/lilygo-t-deck-pro/) |
+| Heltec WiFi LoRa 32 V2 | SSD1306 128×64 | U8g2 | [heltec-wifi-lora-32-v2](../devices/heltec-wifi-lora-32-v2/) |

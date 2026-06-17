@@ -1,0 +1,19 @@
+#ifndef SETTINGS_H
+#define SETTINGS_H
+
+extern char *DUCO_USER = "your_username";
+extern char *MINER_KEY = "None";
+extern char *RIG_IDENTIFIER = "None";
+extern const char SSID[] = "your_wifi_ssid";
+extern const char PASSWORD[] = "your_wifi_password";
+
+#define SERIAL_PRINTING
+#define SERIAL_BAUDRATE 115200
+
+// #define DISPLAY_ST7735
+// #define DISPLAY_GC9A01
+// #define DISPLAY_ST7789
+
+#define SOFTWARE_VERSION "4.3"
+
+#endif

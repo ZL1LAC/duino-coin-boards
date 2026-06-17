@@ -21,7 +21,7 @@ Edit `User_Setup_Select.h` (comment out other setups):
 // #include <User_Setups/Setup_ESP32_2424S012.h>
 ```
 
-Reference copies also live in the repo: `boards/esp32c3-minitv/ST7735_setup.h`, `boards/esp32c3-round128/GC9A01_setup.h`.
+Reference copies also live in the repo: `devices/esp32c3-minitv/tft_setup.h`, `devices/esp32c3-round128/tft_setup.h`.
 
 ## 2. ESP32-C3 SPI crash fix (required on core 3.x)
 
@@ -48,7 +48,7 @@ On **Arduino ESP32 core 3.x**, stock TFT_eSPI can crash in `tft.begin()` with `S
 #define USE_HSPI_PORT
 ```
 
-Re-copy `boards/lilygo-t-deck/tft_setup.h` → `User_Setup.h` after any library update. See [Bodmer/TFT_eSPI#3329](https://github.com/Bodmer/TFT_eSPI/issues/3329).
+Re-copy `devices/lilygo-t-deck/tft_setup.h` → `User_Setup.h` after any library update. See [Bodmer/TFT_eSPI#3329](https://github.com/Bodmer/TFT_eSPI/issues/3329).
 
 ## 4. Firmware init
 

@@ -2,7 +2,7 @@
 
 Personal fork of [Duino-Coin](https://github.com/revoxhere/duino-coin) **ESP_Code** — adapted so mining runs on **specific boards and hardware** I use (displays, touch, pins, etc.).
 
-Not limited to one MCU or screen type. Each board gets its own folder under `boards/` with a README and setup files.
+Not limited to one MCU or screen type. Each device has its own folder under **`devices/`** with a README, settings, and hardware config.
 
 Fork base: upstream **ESP_Code 4.3** · network: [duinocoin.com](https://duinocoin.com)
 
@@ -10,100 +10,83 @@ Fork base: upstream **ESP_Code 4.3** · network: [duinocoin.com](https://duinoco
 
 ---
 
-## Boards in this repo
+## Devices in this repo
 
-| Board | MCU | Notes | Guide |
-|-------|-----|-------|--------|
-| Spotpear ESP32-C3 1.44" Mini TV | ESP32-C3 | ST7735 128×128 | [boards/esp32c3-minitv/](boards/esp32c3-minitv/) · [testbench](testbench/esp32c3-minitv/) |
-| ESP32-2424S012 round | ESP32-C3 | GC9A01 240×240, CST816D touch (C model) | [boards/esp32c3-round128/](boards/esp32c3-round128/) · [testbench](testbench/esp32c3-round128/) |
-| LilyGO T-Deck | ESP32-S3 | ST7789 320×240, keyboard + trackball — **testbench** | [boards/lilygo-t-deck/](boards/lilygo-t-deck/) · [testbench](testbench/lilygo-t-deck/) |
-| Heltec WiFi LoRa 32 (V2) | ESP32 | SSD1306 128×64 OLED + LoRa — **testbench** | [boards/heltec-wifi-lora-32-v2/](boards/heltec-wifi-lora-32-v2/) · [testbench](testbench/heltec-wifi-lora-32-v2/) |
-| LilyGO T-Deck Pro | ESP32-S3 | GDEQ031T10 320×240 e-paper — **testbench** | [boards/lilygo-t-deck-pro/](boards/lilygo-t-deck-pro/) · [testbench](testbench/lilygo-t-deck-pro/) |
+| Device | MCU | Notes | Guide |
+|--------|-----|-------|--------|
+| Spotpear ESP32-C3 1.44" Mini TV | ESP32-C3 | ST7735 128×128 | [devices/esp32c3-minitv/](devices/esp32c3-minitv/) |
+| ESP32-2424S012 round | ESP32-C3 | GC9A01 240×240, CST816D touch | [devices/esp32c3-round128/](devices/esp32c3-round128/) |
+| LilyGO T-Deck | ESP32-S3 | ST7789 320×240 — **testbench** | [devices/lilygo-t-deck/](devices/lilygo-t-deck/) |
+| Heltec WiFi LoRa 32 (V2) | ESP32 | SSD1306 OLED + LoRa — **testbench** | [devices/heltec-wifi-lora-32-v2/](devices/heltec-wifi-lora-32-v2/) |
+| LilyGO T-Deck Pro | ESP32-S3 | GDEQ031T10 e-paper — **testbench** | [devices/lilygo-t-deck-pro/](devices/lilygo-t-deck-pro/) |
 
-**Pre-built release firmware** (GitHub Releases): only boards with `firmware.enabled: true` in [boards/registry.json](boards/registry.json) — currently the two ESP32-C3 TFT boards. Other ports build from source via the testbench.
+**Pre-built release firmware** (GitHub Releases): only devices with `firmware.enabled: true` in [devices/registry.json](devices/registry.json) — currently the two ESP32-C3 TFT boards.
 
-Display comparison and switching: **[docs/DISPLAYS.md](docs/DISPLAYS.md)** (ESP32-C3 TFT miners; other displays see board READMEs)
+Display comparison (C3 TFT): **[docs/DISPLAYS.md](docs/DISPLAYS.md)**
 
-**Adding another board:** [docs/ADDING_A_BOARD.md](docs/ADDING_A_BOARD.md) · registry: [boards/registry.json](boards/registry.json) · scaffold: `bash scripts/new-board.sh <id> "<name>"`
-
-More boards will be added under `boards/` — not every port will be ESP32-C3 or have a display.
+**Adding another device:** [docs/ADDING_A_BOARD.md](docs/ADDING_A_BOARD.md) · registry: [devices/registry.json](devices/registry.json) · scaffold: `bash scripts/new-device.sh <id> "<name>"`
 
 ---
 
 ## Quick start
 
-### Pre-built binary (ESP32-C3 TFT boards)
+### Pre-built binary (ESP32-C3 TFT devices)
 
-See [firmware/README.md](firmware/README.md) and [docs/FLASH.md](docs/FLASH.md) for `esp32c3-minitv` and `esp32c3-round128` release images.
+See [firmware/README.md](firmware/README.md) and [docs/FLASH.md](docs/FLASH.md).
 
-### Build from source (any board)
+### Build from source (any device)
 
-1. **Clone**
-   ```bash
-   git clone https://github.com/ZL1LAC/duino-coin-boards.git
-   cd duino-coin-boards
+1. **Clone** and open the guide for your hardware: **`devices/<id>/README.md`**
+
+2. **Sync device profile**
+   ```powershell
+   copy devices\lilygo-t-deck-pro\Settings.h.example devices\lilygo-t-deck-pro\Settings.h
+   # edit WiFi + username in Settings.h
+   .\scripts\sync-device.ps1 lilygo-t-deck-pro miner
    ```
 
-2. **Credentials** — in `ESP_Code/`:
-   ```bash
-   copy Settings.h.example Settings.h    # Windows
-   cp Settings.h.example Settings.h      # macOS / Linux
-   ```
-   Set username, WiFi (2.4 GHz), and mining key.
+3. **Libraries / TFT setup** — follow the device README (`setup-tft-espi.ps1` for TFT_eSPI boards).
 
-3. **Pick hardware** in `ESP_Code/Settings.h` — enable one `DISPLAY_*` line (see your board README).
+4. **Upload** — open **`ESP_Code/ESP_Code.ino`** with the Arduino board settings from that README.
 
-4. **Libraries / patches** — follow the README for your board (`boards/*/`, `patches/`).
-
-5. **Upload** — open **`ESP_Code/ESP_Code.ino`** with the board settings from that README.
-
-For **S3 / OLED / e-paper** boards, use the [testbench](testbench/README.md) generic test first, then sync miner settings with `sync-testbench-settings.ps1`.
+For **bring-up**, run generic test first: `sync-device.ps1 <id> test` → [testbench/GenericTest/GenericTest.ino](testbench/GenericTest/GenericTest.ino).
 
 ---
 
 ## Repository layout
 
 ```
-duino-coin-boards/
-├── ESP_Code/           Arduino sketch (open ESP_Code.ino here)
-├── boards/             Per-board README, TFT setup, registry.json
-│   ├── registry.json   Board list — CI and build scripts read this
-│   ├── _template/      Copy via scripts/new-board.sh
+duino-coin-devices/
+├── ESP_Code/           Shared miner sketch (open ESP_Code.ino here)
+├── devices/            Per-device README, Settings, TestConfig, tft_setup, registry.json
+│   ├── registry.json
 │   ├── esp32c3-minitv/
-│   ├── esp32c3-round128/
-│   ├── lilygo-t-deck/
 │   ├── lilygo-t-deck-pro/
-│   └── heltec-wifi-lora-32-v2/
-├── docs/               Shared docs (display comparison, adding boards, flash)
-├── testbench/          Board Settings profiles → sync into ESP_Code for local tests
-│   ├── esp32c3-minitv/
-│   ├── esp32c3-round128/
-│   ├── lilygo-t-deck/
-│   ├── lilygo-t-deck-pro/
-│   └── heltec-wifi-lora-32-v2/
-├── scripts/            Build, new-board scaffold, registry helper
+│   └── ...
+├── testbench/
+│   └── GenericTest/    Shared bring-up sketch
+├── docs/               Cross-device documentation
+├── scripts/            sync-device, build-firmware, new-device
+├── firmware/           Pre-built flash images (GitHub Releases)
 └── patches/            Library / toolchain fixes
 ```
 
 | Path | Purpose |
 |------|---------|
-| `ESP_Code/` | Main miner sketch, `Settings.h.example`, `DisplayHal.h`, drivers |
-| `boards/registry.json` | Single source of truth for board IDs, CI firmware matrix, build profiles |
-| `boards/<name>/` | Board README, `*_setup.h`, optional `lopaka/` UI imports |
-| `docs/` | Cross-board documentation |
-| `scripts/` | `new-board.sh`, `build-firmware.sh`, `registry.py` |
-| `firmware/` | Pre-built flash images (via GitHub Releases) |
-| `testbench/` | Per-board `Settings.h` profiles — sync to `ESP_Code/` for local mining tests |
-| `patches/` | TFT_eSPI user setups and ESP32-C3 fixes |
+| `devices/<id>/` | **Start here** — README, `Settings.h.example`, `TestConfig.h.example`, `tft_setup.h` |
+| `devices/registry.json` | Device list, CI firmware matrix, TFT paths |
+| `ESP_Code/` | Shared miner, `DisplayHal.h`, board drivers |
+| `testbench/GenericTest/` | Display-only test before mining |
+| `scripts/sync-device.ps1` | Copy device profile → active sketches |
 
 ---
 
-## Adding a new board
+## Adding a new device
 
-1. Run `bash scripts/new-board.sh <board-id> "<Name>"` (or copy `boards/_template/`).
-2. Implement firmware in `ESP_Code/` as needed (`DisplayHal.h`, drivers, `Settings.h.example`).
-3. Add an entry to **`boards/registry.json`** (`firmware.enabled: false` until it builds).
-4. Document in `boards/<id>/README.md` and list in this README.
+1. `bash scripts/new-device.sh <device-id> "<Name>"`
+2. Implement shared firmware in `ESP_Code/` as needed
+3. Add entry to **`devices/registry.json`**
+4. Document in `devices/<id>/README.md` and list in this README
 
 Full checklist: **[docs/ADDING_A_BOARD.md](docs/ADDING_A_BOARD.md)**
 

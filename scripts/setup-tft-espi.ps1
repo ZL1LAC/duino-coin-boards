@@ -11,7 +11,7 @@ param(
 )
 
 $Root = Split-Path -Parent $PSScriptRoot
-$RegistryPath = Join-Path $Root "boards\registry.json"
+$RegistryPath = Join-Path $Root "devices\registry.json"
 
 if (-not (Test-Path $RegistryPath)) {
     Write-Error "Missing registry: $RegistryPath"
@@ -22,7 +22,7 @@ $registry = Get-Content -Raw -Path $RegistryPath | ConvertFrom-Json
 $board = $registry.boards | Where-Object { $_.id -eq $BoardId } | Select-Object -First 1
 
 if (-not $board) {
-    Write-Error "Unknown board id: $BoardId (not in boards/registry.json)"
+    Write-Error "Unknown device id: $BoardId (not in devices/registry.json)"
     exit 1
 }
 

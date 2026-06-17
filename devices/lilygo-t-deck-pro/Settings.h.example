@@ -1,0 +1,45 @@
+// For full miner later — copy to Settings.h, then: .\scripts\sync-device.ps1 lilygo-t-deck-pro
+// Bring-up first: use TestConfig.h.example + sync-device.ps1 <id> test -> testbench/GenericTest/GenericTest.ino
+
+#ifndef SETTINGS_H
+#define SETTINGS_H
+
+extern char *DUCO_USER = "your_username";
+extern char *MINER_KEY = "None";
+extern char *RIG_IDENTIFIER = "None";
+extern const char SSID[] = "your_wifi_ssid";
+extern const char PASSWORD[] = "your_wifi_password";
+
+#define SERIAL_PRINTING
+#define SERIAL_BAUDRATE 115200
+#define LWD_TIMEOUT 30000
+
+#define DISPLAY_GDEQ031T10
+#define LILYGO_T_DECK_PRO
+
+#ifndef TDECK_PRO_EPD_RST
+  #define TDECK_PRO_EPD_RST 16
+#endif
+
+#undef LED_BLINKING
+
+#define SOFTWARE_VERSION "4.3"
+extern unsigned int hashrate = 0;
+extern unsigned int hashrate_core_two = 0;
+extern unsigned int difficulty = 0;
+extern unsigned long share_count = 0;
+extern unsigned long accepted_share_count = 0;
+extern String node_id = "";
+extern String WALLET_ID = "";
+extern unsigned int ping = 0;
+
+#if defined(DISPLAY_GDEQ031T10)
+    #include <GxEPD2_BW.h>
+    #include "TDeckProDisplay.h"
+    GxEPD2_BW<GxEPD2_310_GDEQ031T10, GxEPD2_310_GDEQ031T10::HEIGHT> epd(
+      GxEPD2_310_GDEQ031T10(TDECK_PRO_EPD_CS, TDECK_PRO_EPD_DC, TDECK_PRO_EPD_RST, TDECK_PRO_EPD_BUSY));
+#endif
+
+IPAddress DNS_SERVER(1, 1, 1, 1);
+
+#endif

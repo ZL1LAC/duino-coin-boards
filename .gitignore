@@ -1,9 +1,11 @@
 # Local miner credentials (copy ESP_Code/Settings.h.example to ESP_Code/Settings.h)
 ESP_Code/Settings.h
 
-# Testbench local settings
+# Testbench / device local settings
 testbench/**/Settings.h
 testbench/**/TestConfig.h
+devices/**/Settings.h
+devices/**/TestConfig.h
 testbench/GenericTest/tft_setup.h
 ESP_Code/tft_setup.h
 

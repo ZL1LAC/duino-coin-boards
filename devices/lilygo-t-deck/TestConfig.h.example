@@ -1,0 +1,15 @@
+// Copy to TestConfig.h, then: .\scripts\sync-device.ps1 lilygo-t-deck
+
+#ifndef TEST_CONFIG_H
+#define TEST_CONFIG_H
+
+#define BOARD_NAME "LilyGO T-Deck"
+
+#define SERIAL_BAUDRATE 115200
+
+#define DISPLAY_ST7789
+#define LILYGO_T_DECK
+
+#define TFT_ROTATION 1
+
+#endif

@@ -60,7 +60,7 @@ extern const char PASSWORD[] = "your_wifi_password";
 // SDA - GPIO21 (ESP32) or GPIO4 (D1 on ESP8266) or GPIO33 (ESP32-S2)
 // #define DISPLAY_SSD1306
 
-// Heltec WiFi LoRa 32 (V2) — use with DISPLAY_SSD1306. See boards/heltec-wifi-lora-32-v2/
+// Heltec WiFi LoRa 32 (V2) — use with DISPLAY_SSD1306. See devices/heltec-wifi-lora-32-v2/
 // #define HELTEC_WIFI_LORA_32_V2
 
 // Uncomment to enable a 16x2 LCD screen on a direct bus to display mining info in real time
@@ -73,10 +73,10 @@ extern const char PASSWORD[] = "your_wifi_password";
 // Uncomment to enable a ST7789 LCD screen (LilyGo T-Display S3, LilyGO T-Deck, etc.)
 // #define DISPLAY_ST7789
 
-// LilyGO T-Deck — use with DISPLAY_ST7789. See boards/lilygo-t-deck/
+// LilyGO T-Deck — use with DISPLAY_ST7789. See devices/lilygo-t-deck/
 // #define LILYGO_T_DECK
 
-// LilyGO T-Deck Pro — 3.1" GDEQ031T10 e-paper. See boards/lilygo-t-deck-pro/
+// LilyGO T-Deck Pro — 3.1" GDEQ031T10 e-paper. See devices/lilygo-t-deck-pro/
 // #define DISPLAY_GDEQ031T10
 // #define LILYGO_T_DECK_PRO
 
@@ -293,4 +293,3 @@ extern unsigned int ping = 0;
 IPAddress DNS_SERVER(1, 1, 1, 1); // Cloudflare DNS server
 
 #endif  // End of SETTINGS_H
-

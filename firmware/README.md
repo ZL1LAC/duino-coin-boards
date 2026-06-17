@@ -8,8 +8,8 @@ Check **[GitHub Releases](https://github.com/ZL1LAC/duino-coin-boards/releases)*
 
 | Board | File | Guide |
 |-------|------|--------|
-| Spotpear ESP32-C3 Mini TV | `esp32c3-minitv-merged-flash.bin` | [boards/esp32c3-minitv](../boards/esp32c3-minitv/) |
-| ESP32-2424S012 round | `esp32c3-round128-merged-flash.bin` | [boards/esp32c3-round128](../boards/esp32c3-round128/) |
+| Spotpear ESP32-C3 Mini TV | `esp32c3-minitv-merged-flash.bin` | [devices/esp32c3-minitv](../devices/esp32c3-minitv/) |
+| ESP32-2424S012 round | `esp32c3-round128-merged-flash.bin` | [devices/esp32c3-round128](../devices/esp32c3-round128/) |
 
 Each release folder also includes `manifest.json` (build metadata) and `FLASH.txt` (quick command).
 
@@ -45,7 +45,7 @@ git tag firmware-v1.0.0
 git push origin firmware-v1.0.0
 ```
 
-GitHub Actions builds every board with `"firmware.enabled": true` in [boards/registry.json](../boards/registry.json) and attaches the binaries to the release.
+GitHub Actions builds every device with `"firmware.enabled": true` in [devices/registry.json](../devices/registry.json) and attaches the binaries to the release.
 
 Manual test build without tagging: **Actions → Firmware → Run workflow**.
 

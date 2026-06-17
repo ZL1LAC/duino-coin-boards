@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Build merged flash images for boards listed in boards/registry.json.
+# Build merged flash images for devices listed in devices/registry.json.
 # Usage: build-firmware.sh [board-id|all]
 set -euo pipefail
 
@@ -7,7 +7,7 @@ TARGET="${1:-all}"
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 SKETCH="$ROOT/ESP_Code"
 DIST="$ROOT/firmware/dist"
-REGISTRY="$ROOT/boards/registry.json"
+REGISTRY="$ROOT/devices/registry.json"
 
 if [[ "$TARGET" == "all" ]]; then
   mapfile -t BOARDS < <(python3 "$ROOT/scripts/registry.py" list)

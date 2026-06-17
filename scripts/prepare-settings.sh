@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Generate ESP_Code/Settings.h for a firmware release build.
-# Usage: prepare-settings.sh <board-id from boards/registry.json>
+# Usage: prepare-settings.sh <device-id from devices/registry.json>
 set -euo pipefail
 
 BOARD="${1:?board id required}"
@@ -10,7 +10,7 @@ EXAMPLE="$ROOT/ESP_Code/Settings.h.example"
 
 cp "$EXAMPLE" "$OUT"
 
-python3 - "$BOARD" "$OUT" "$ROOT/boards/registry.json" <<'PY'
+python3 - "$BOARD" "$OUT" "$ROOT/devices/registry.json" <<'PY'
 import json
 import re
 import sys
