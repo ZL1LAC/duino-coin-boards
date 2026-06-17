@@ -1,8 +1,8 @@
-# Display & board guide
+# Display & board guide (ESP32-C3 TFT miners)
 
-This firmware supports **multiple ESP32-C3 boards** from one codebase. Enable exactly **one** display in `Settings.h`.
+TFT-specific notes for boards that use `DisplayHal.h`. Other future ports in this repo may not use displays at all.
 
-**Main readme:** [README.md](README.md)
+**Project home:** [README.md](README.md)
 
 ## Quick comparison
 
