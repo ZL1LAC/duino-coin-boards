@@ -1,25 +1,24 @@
 # Duino-Coin on the Spotpear ESP32-C3 1.44" "Mini TV" (ST7735)
 
-This repo is the official Duino-Coin `ESP_Code` firmware, set up to mine on the
-**Spotpear ESP32-C3 1.44-inch LCD** board and show live mining stats on the
+Board-specific guide for the **Spotpear 128×128 ST7735** panel.
+
+**Project home:** [README.md](README.md) · **Other boards:** [DISPLAYS.md](DISPLAYS.md)
+
+This firmware is the official Duino-Coin `ESP_Code` fork, set up to mine on the
+Spotpear ESP32-C3 1.44-inch LCD board and show live mining stats on the
 128×128 ST7735 screen.
 
-Your Duino-Coin account and WiFi go in `Settings.h` (not in git — copy from
-`Settings.h.example` after cloning). The steps below cover the Arduino IDE,
-libraries, TFT_eSPI board setup, and upload.
+Copy `Settings.h.example` → `Settings.h` and add your Duino-Coin account and WiFi
+(2.4 GHz only on ESP32-C3). Steps below cover Arduino IDE, libraries, TFT_eSPI,
+and upload.
 
 ---
 
 ## 0. What was changed for this board
 
-- `Settings.h.example` – template with `#define DISPLAY_ST7735`; copy to `Settings.h`
-- `DisplayHal.h` – added a 128×128 ST7735 layout (hashrate, shares, diff, IP, uptime).
-- `ESP_Code.ino` – display hooks now also fire for the ST7735.
-- `ST7735_setup.h` – the TFT_eSPI pin/driver configuration for this exact board.
-
-> Heads-up: your WiFi network is **`IoT`**. The ESP32-C3 only has a 2.4 GHz radio,
-> so make sure `IoT` is a 2.4 GHz network (or its 2.4 GHz band), otherwise it
-> won't connect.
+- `Settings.h.example` – enable `#define DISPLAY_ST7735` (disable `DISPLAY_GC9A01`)
+- `DisplayHal.h` – 128×128 ST7735 mining UI
+- `ST7735_setup.h` / `patches/TFT_eSPI/Setup_Spotpear_ESP32C3_144.h` – TFT_eSPI pins
 
 ---
 

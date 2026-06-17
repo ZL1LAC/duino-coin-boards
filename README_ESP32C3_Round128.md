@@ -1,5 +1,9 @@
 # ESP32-C3 1.28" Round Display — Duino-Coin Miner
 
+Board-specific guide for the **ESP32-2424S012** (GC9A01 240×240 round, optional CST816D touch).
+
+**Project home:** [README.md](README.md) · **Other boards:** [DISPLAYS.md](DISPLAYS.md)
+
 Mining firmware for the **ESP32-2424S012** board (ESP32-C3 + **GC9A01** 240×240 round IPS, ~37 mm).
 
 Uses the **same mining UI as the Spotpear Mini TV** ([ST7735 128×128](README_ESP32C3_MiniTV.md)), scaled for the round panel. See **[DISPLAYS.md](DISPLAYS.md)** for a side-by-side comparison.

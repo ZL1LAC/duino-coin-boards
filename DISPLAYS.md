@@ -1,6 +1,8 @@
-# Display options — ESP32-C3 Duino-Coin miner
+# Display & board guide
 
-Two supported boards share the **same mining screen** (Lopaka layout from the Spotpear build). Only the panel driver, size, and TFT_eSPI profile differ.
+This firmware supports **multiple ESP32-C3 boards** from one codebase. Enable exactly **one** display in `Settings.h`.
+
+**Main readme:** [README.md](README.md)
 
 ## Quick comparison
 
