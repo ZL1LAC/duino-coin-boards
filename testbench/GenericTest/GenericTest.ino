@@ -27,6 +27,16 @@
   #define HAS_OLED_DISPLAY 1
 #endif
 
+#if defined(DISPLAY_GDEQ031T10)
+  #include <GxEPD2_BW.h>
+  #ifndef TDECK_PRO_EPD_RST
+    #define TDECK_PRO_EPD_RST 16
+  #endif
+  GxEPD2_BW<GxEPD2_310_GDEQ031T10, GxEPD2_310_GDEQ031T10::HEIGHT> epd(
+    GxEPD2_310_GDEQ031T10(34, 35, TDECK_PRO_EPD_RST, 37));
+  #define HAS_EPD_DISPLAY 1
+#endif
+
 #ifndef TFT_ROTATION
   #define TFT_ROTATION 1
 #endif
@@ -70,6 +80,31 @@ static void drawTestScreen() {
   u8g2.drawFrame(0, 0, 128, 64);
   u8g2.sendBuffer();
 #endif
+
+#if defined(HAS_EPD_DISPLAY)
+  epd.setFullWindow();
+  epd.fillScreen(GxEPD_WHITE);
+  int w = epd.width();
+  int h = epd.height();
+  int bandH = h / 6;
+  for (int i = 0; i < 6; i++) {
+    if (i % 2) {
+      epd.fillRect(0, i * bandH, w, bandH, GxEPD_BLACK);
+    }
+  }
+  epd.fillRect(8, h / 3, w - 16, h / 3, GxEPD_WHITE);
+  epd.setTextColor(GxEPD_BLACK);
+  epd.setTextSize(2);
+  epd.setCursor(12, h / 3 + 20);
+  epd.print(BOARD_NAME);
+  epd.setTextSize(1);
+  epd.setCursor(12, h / 3 + 44);
+  epd.printf("%dx%d  rot=%d", w, h, TFT_ROTATION);
+  epd.setCursor(12, h / 3 + 58);
+  epd.print("Generic test OK");
+  epd.drawRect(0, 0, w, h, GxEPD_BLACK);
+  epd.display(false);
+#endif
 }
 
 void setup() {
@@ -87,6 +122,9 @@ void setup() {
   drawTestScreen();
 #elif defined(HAS_OLED_DISPLAY)
   oled_init(u8g2);
+  drawTestScreen();
+#elif defined(HAS_EPD_DISPLAY)
+  epd_init(epd, TFT_ROTATION);
   drawTestScreen();
 #else
   Serial.println("No DISPLAY_* in TestConfig.h — serial-only mode");

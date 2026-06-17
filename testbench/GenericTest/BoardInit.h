@@ -13,8 +13,16 @@
   #include "../../ESP_Code/TDeckDisplay.h"
 #endif
 
+#if defined(LILYGO_T_DECK_PRO)
+  #include "../../ESP_Code/TDeckProDisplay.h"
+#endif
+
 #if defined(HELTEC_WIFI_LORA_32_V2)
   #include "../../ESP_Code/HeltecDisplay.h"
+#endif
+
+#if defined(DISPLAY_GDEQ031T10)
+  #include <GxEPD2_BW.h>
 #endif
 
 #if defined(DISPLAY_SSD1306)
@@ -85,6 +93,23 @@ inline void display_init(Tft &tft, uint8_t rotation) {
   Serial.printf("Display init OK — %dx%d @ rot %u\n", tft.width(), tft.height(), rotation);
 }
 #endif  // DISPLAY_ST7789 || DISPLAY_ST7735 || DISPLAY_GC9A01
+
+#if defined(DISPLAY_GDEQ031T10)
+template<typename EpdType>
+inline void epd_init(EpdType &epd, uint8_t rotation) {
+#if defined(LILYGO_T_DECK_PRO)
+  Serial.println("T-Deck Pro: e-paper init...");
+  tdeck_pro_display_init(epd, rotation);
+#else
+  epd.init(115200, true, 2, false);
+  epd.setRotation(rotation);
+  epd.setFullWindow();
+  epd.fillScreen(GxEPD_WHITE);
+  epd.display(false);
+#endif
+  Serial.printf("Display init OK — %dx%d @ rot %u\n", epd.width(), epd.height(), rotation);
+}
+#endif
 
 #if defined(DISPLAY_SSD1306)
 template<typename U8G2Type>

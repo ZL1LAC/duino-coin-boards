@@ -23,7 +23,7 @@ command -v arduino-cli >/dev/null || {
 if [[ "${SKIP_DEPS:-0}" != "1" ]]; then
   arduino-cli core update-index
   arduino-cli core install esp32:esp32
-  arduino-cli lib install "ArduinoJson" "WiFiManager" "TFT_eSPI" "U8g2"
+  arduino-cli lib install "ArduinoJson" "WiFiManager" "TFT_eSPI" "U8g2" "GxEPD2" "Adafruit GFX Library"
 fi
 
 LIB_DIR="${ARDUINO_LIBRARIES:-$HOME/Arduino/libraries}"

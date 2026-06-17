@@ -31,7 +31,7 @@ extern const char PASSWORD[] = "your_wifi_password";
 #define SERIAL_PRINTING
 
 // Edit the line below if you wish to change the serial speed (low values may reduce performance but are less prone to interference)
-#if defined(DISPLAY_ST7735) || defined(DISPLAY_GC9A01) || defined(LILYGO_T_DECK) || defined(HELTEC_WIFI_LORA_32_V2)
+#if defined(DISPLAY_ST7735) || defined(DISPLAY_GC9A01) || defined(LILYGO_T_DECK) || defined(LILYGO_T_DECK_PRO) || defined(HELTEC_WIFI_LORA_32_V2)
   // USB-CDC / CP2102 serial is easiest to read at 115200 in the Arduino Serial Monitor
   #define SERIAL_BAUDRATE 115200
 #else
@@ -75,6 +75,10 @@ extern const char PASSWORD[] = "your_wifi_password";
 
 // LilyGO T-Deck — use with DISPLAY_ST7789. See boards/lilygo-t-deck/
 // #define LILYGO_T_DECK
+
+// LilyGO T-Deck Pro — 3.1" GDEQ031T10 e-paper. See boards/lilygo-t-deck-pro/
+// #define DISPLAY_GDEQ031T10
+// #define LILYGO_T_DECK_PRO
 
 // Spotpear ESP32-C3 1.44" Mini TV (ST7735 128x128) ? see ST7735_setup.h, DISPLAYS.md
 #define DISPLAY_ST7735
@@ -138,7 +142,7 @@ extern const char PASSWORD[] = "your_wifi_password";
 // On ESP32-C3 display boards GPIO11 (flash) / GPIO8 conflict with LED blink ? disabled below.
 #define LED_BLINKING
 
-#if defined(DISPLAY_ST7735) || defined(DISPLAY_GC9A01) || defined(LILYGO_T_DECK) || defined(HELTEC_WIFI_LORA_32_V2)
+#if defined(DISPLAY_ST7735) || defined(DISPLAY_GC9A01) || defined(LILYGO_T_DECK) || defined(LILYGO_T_DECK_PRO) || defined(HELTEC_WIFI_LORA_32_V2)
   #undef LED_BLINKING
 #endif
 
@@ -211,6 +215,13 @@ extern unsigned int ping = 0;
 
     // initialize the library
     TFT_eSPI tft = TFT_eSPI();
+#endif
+
+#if defined(DISPLAY_GDEQ031T10)
+    #include <GxEPD2_BW.h>
+    #include "TDeckProDisplay.h"
+    GxEPD2_BW<GxEPD2_310_GDEQ031T10, GxEPD2_310_GDEQ031T10::HEIGHT> epd(
+      GxEPD2_310_GDEQ031T10(TDECK_PRO_EPD_CS, TDECK_PRO_EPD_DC, TDECK_PRO_EPD_RST, TDECK_PRO_EPD_BUSY));
 #endif
 
 #if defined(DISPLAY_ST7735) || defined(DISPLAY_GC9A01)

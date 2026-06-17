@@ -59,7 +59,7 @@
   #include "Dashboard.h"
 #endif
 
-#if defined(DISPLAY_SSD1306) || defined(DISPLAY_16X2) || defined(DISPLAY_ST7789) || defined(DISPLAY_ST7735) || defined(DISPLAY_GC9A01)
+#if defined(DISPLAY_SSD1306) || defined(DISPLAY_16X2) || defined(DISPLAY_ST7789) || defined(DISPLAY_ST7735) || defined(DISPLAY_GC9A01) || defined(DISPLAY_GDEQ031T10)
   #include "DisplayHal.h"
 #endif
 
@@ -77,6 +77,22 @@ void tdeck_lcd_startup() {
     Serial.println("LCD: T-Deck init on core 0...");
     Serial.flush();
   #endif
+  screen_setup();
+  display_boot();
+}
+#endif
+
+#if defined(LILYGO_T_DECK_PRO)
+bool tdeck_pro_lcd_started = false;
+
+void tdeck_pro_lcd_startup() {
+  if (tdeck_pro_lcd_started) return;
+  tdeck_pro_lcd_started = true;
+  #if defined(SERIAL_PRINTING)
+    Serial.println("EPD: T-Deck Pro init on core 0...");
+    Serial.flush();
+  #endif
+  tdeck_pro_battery_init();
   screen_setup();
   display_boot();
 }
@@ -161,7 +177,7 @@ void RestartESP(String msg) {
     Serial.println("Restarting ESP...");
   #endif
 
-  #if defined(DISPLAY_SSD1306) || defined(DISPLAY_16X2) || defined(DISPLAY_ST7789) || defined(DISPLAY_ST7735) || defined(DISPLAY_GC9A01)
+  #if defined(DISPLAY_SSD1306) || defined(DISPLAY_16X2) || defined(DISPLAY_ST7789) || defined(DISPLAY_ST7735) || defined(DISPLAY_GC9A01) || defined(DISPLAY_GDEQ031T10)
     display_info("Restarting ESP...");
   #endif
 
@@ -234,7 +250,7 @@ namespace {
           Serial.println("Poolpicker selected the best mining node: " + node_id);
         #endif
 
-        #if defined(DISPLAY_SSD1306) || defined(DISPLAY_16X2) || defined(DISPLAY_ST7789) || defined(DISPLAY_ST7735) || defined(DISPLAY_GC9A01)
+        #if defined(DISPLAY_SSD1306) || defined(DISPLAY_16X2) || defined(DISPLAY_ST7789) || defined(DISPLAY_ST7735) || defined(DISPLAY_GC9A01) || defined(DISPLAY_GDEQ031T10)
           display_info(node_id);
         #endif
     }
@@ -285,7 +301,7 @@ namespace {
                Serial.printf("Error fetching node from poolpicker: %s\n", https.errorToString(httpCode).c_str());
                VerifyWifi();
             #endif
-            #if defined(DISPLAY_SSD1306) || defined(DISPLAY_16X2) || defined(DISPLAY_ST7789) || defined(DISPLAY_ST7735) || defined(DISPLAY_GC9A01)
+            #if defined(DISPLAY_SSD1306) || defined(DISPLAY_16X2) || defined(DISPLAY_ST7789) || defined(DISPLAY_ST7735) || defined(DISPLAY_GC9A01) || defined(DISPLAY_GDEQ031T10)
               display_info(https.errorToString(httpCode));
             #endif
         }
@@ -378,7 +394,7 @@ namespace {
             Serial.println();
         #endif
 
-        #if defined(DISPLAY_SSD1306) || defined(DISPLAY_16X2) || defined(DISPLAY_ST7789) || defined(DISPLAY_ST7735) || defined(DISPLAY_GC9A01)
+        #if defined(DISPLAY_SSD1306) || defined(DISPLAY_16X2) || defined(DISPLAY_ST7789) || defined(DISPLAY_ST7735) || defined(DISPLAY_GC9A01) || defined(DISPLAY_GDEQ031T10)
             display_info("Waiting for node...");
         #endif
         SelectNode();
@@ -398,7 +414,7 @@ namespace {
             #if defined(SERIAL_PRINTING)
               Serial.println("\n\nWiFi connect timed out (90s) — will keep retrying in loop");
             #endif
-            #if defined(DISPLAY_SSD1306) || defined(DISPLAY_16X2) || defined(DISPLAY_ST7789) || defined(DISPLAY_ST7735) || defined(DISPLAY_GC9A01)
+            #if defined(DISPLAY_SSD1306) || defined(DISPLAY_16X2) || defined(DISPLAY_ST7789) || defined(DISPLAY_ST7735) || defined(DISPLAY_GC9A01) || defined(DISPLAY_GDEQ031T10)
               display_info("WiFi timeout — retrying");
             #endif
         } else {
@@ -417,7 +433,7 @@ namespace {
                 Serial.println();
             #endif
 
-            #if defined(DISPLAY_SSD1306) || defined(DISPLAY_16X2) || defined(DISPLAY_ST7789) || defined(DISPLAY_ST7735) || defined(DISPLAY_GC9A01)
+            #if defined(DISPLAY_SSD1306) || defined(DISPLAY_16X2) || defined(DISPLAY_ST7789) || defined(DISPLAY_ST7735) || defined(DISPLAY_GC9A01) || defined(DISPLAY_GDEQ031T10)
                 display_info("Waiting for node...");
             #endif
             SelectNode();
@@ -533,13 +549,17 @@ void task1_func(void *) {
       VOID SETUP() { }
 
       VOID LOOP() {
-        job[0]->mine();
-
         #if defined(LILYGO_T_DECK)
           tdeck_lcd_startup();
         #endif
 
-        #if defined(DISPLAY_SSD1306) || defined(DISPLAY_16X2) || defined(DISPLAY_ST7789) || defined(DISPLAY_ST7735) || defined(DISPLAY_GC9A01)
+        #if defined(LILYGO_T_DECK_PRO)
+          tdeck_pro_lcd_startup();
+        #endif
+
+        job[0]->mine();
+
+        #if defined(DISPLAY_SSD1306) || defined(DISPLAY_16X2) || defined(DISPLAY_ST7789) || defined(DISPLAY_ST7735) || defined(DISPLAY_GC9A01) || defined(DISPLAY_GDEQ031T10)
            float hashrate_float = (hashrate+hashrate_core_two) / 1000.0;
            float accept_rate = (share_count > 0)
              ? (accepted_share_count / 0.01f / share_count)
@@ -628,13 +648,13 @@ void setup() {
         Serial.flush();
     #endif
 
-    #if defined(DISPLAY_SSD1306) || defined(DISPLAY_16X2) || defined(DISPLAY_ST7789) || defined(DISPLAY_ST7735) || defined(DISPLAY_GC9A01)
-        #if !defined(LILYGO_T_DECK)
+    #if defined(DISPLAY_SSD1306) || defined(DISPLAY_16X2) || defined(DISPLAY_ST7789) || defined(DISPLAY_ST7735) || defined(DISPLAY_GC9A01) || defined(DISPLAY_GDEQ031T10)
+        #if !defined(LILYGO_T_DECK) && !defined(LILYGO_T_DECK_PRO)
           screen_setup();
           display_boot();
           delay(500);
-        #elif defined(SERIAL_PRINTING)
-          Serial.println("LCD: deferred until mining task (core 0)");
+        #elif defined(SERIAL_PRINTING) && (defined(LILYGO_T_DECK) || defined(LILYGO_T_DECK_PRO))
+          Serial.println("Display: deferred until mining task (core 0)");
           Serial.flush();
         #endif
     #endif
@@ -755,7 +775,7 @@ void setup() {
         #if defined(BLUSHYBOX)
           blinker.detach();
         #endif
-        #if defined(DISPLAY_SSD1306) || defined(DISPLAY_16X2) || defined(DISPLAY_ST7789) || defined(DISPLAY_ST7735) || defined(DISPLAY_GC9A01)
+        #if defined(DISPLAY_SSD1306) || defined(DISPLAY_16X2) || defined(DISPLAY_ST7789) || defined(DISPLAY_ST7735) || defined(DISPLAY_GC9A01) || defined(DISPLAY_GDEQ031T10)
             display_info("Waiting for node...");
         #endif
         #if defined(BLUSHYBOX)
@@ -766,7 +786,7 @@ void setup() {
           blinker.detach();
         #endif
     #else
-        #if defined(DISPLAY_SSD1306) || defined(DISPLAY_16X2) || defined(DISPLAY_ST7789) || defined(DISPLAY_ST7735) || defined(DISPLAY_GC9A01)
+        #if defined(DISPLAY_SSD1306) || defined(DISPLAY_16X2) || defined(DISPLAY_ST7789) || defined(DISPLAY_ST7735) || defined(DISPLAY_GC9A01) || defined(DISPLAY_GDEQ031T10)
           display_info("Waiting for WiFi...");
         #endif
         SetupWifi();
@@ -844,7 +864,7 @@ void single_core_loop() {
 
     lwdtFeed();
 
-    #if defined(DISPLAY_SSD1306) || defined(DISPLAY_16X2) || defined(DISPLAY_ST7789) || defined(DISPLAY_ST7735) || defined(DISPLAY_GC9A01)
+    #if defined(DISPLAY_SSD1306) || defined(DISPLAY_16X2) || defined(DISPLAY_ST7789) || defined(DISPLAY_ST7735) || defined(DISPLAY_GC9A01) || defined(DISPLAY_GDEQ031T10)
        float hashrate_float = (hashrate+hashrate_core_two) / 1000.0;
        float accept_rate = (share_count > 0)
          ? (accepted_share_count / 0.01f / share_count)
@@ -874,7 +894,7 @@ void loop() {
   #if defined(ESP8266) || defined(CONFIG_FREERTOS_UNICORE)
     single_core_loop();
   #endif
-  #if defined(DISPLAY_SSD1306) || defined(DISPLAY_16X2) || defined(DISPLAY_ST7789) || defined(DISPLAY_ST7735) || defined(DISPLAY_GC9A01)
+  #if defined(DISPLAY_SSD1306) || defined(DISPLAY_16X2) || defined(DISPLAY_ST7789) || defined(DISPLAY_ST7735) || defined(DISPLAY_GC9A01) || defined(DISPLAY_GDEQ031T10)
     display_input_poll();
   #endif
   delay(10);

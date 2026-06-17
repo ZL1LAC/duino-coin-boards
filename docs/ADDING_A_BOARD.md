@@ -185,6 +185,7 @@ GitHub Actions builds all enabled boards and attaches `*-merged-flash.bin` to [R
 | ESP32-S3 + TFT | New FQBN in registry, may need different SPI patch |
 | Headless ESP | Settings + partition only |
 | OLED (SSD1306) | `DISPLAY_SSD1306` + board init (e.g. Heltec Vext) — no TFT_eSPI |
+| E-paper (GDEQ031T10) | `DISPLAY_GDEQ031T10` + GxEPD2 — see T-Deck Pro |
 | Non-ESP | May fork different upstream sketch — still document under `boards/` |
 
 When you know what the next device is, run `new-board.sh` and we can fill in the registry and `DisplayHal` block together.

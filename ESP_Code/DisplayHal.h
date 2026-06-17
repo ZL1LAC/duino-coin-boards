@@ -21,19 +21,41 @@
     static byte msec[] = {0x0A, 0x15, 0x11, 0x06, 0x08, 0x04, 0x02, 0x0C};
 #endif
 
-#if defined(DISPLAY_ST7789)
-    // Define colors
-    #define WHITE       TFT_WHITE
-    #define BLACK       TFT_BLACK
-    #define DUCO_GOLD   0xFD20
-    #define DUCO_GRAY   0x7BEF
-    #define DUCO_DARK   0x39E7
-    #define DUCO_GREEN  0x07E0
-    #define DUCO_CYAN   0x07FF
+#if defined(LILYGO_T_DECK_PRO) && defined(DISPLAY_GDEQ031T10)
+  #include <GxEPD2_BW.h>
+  #include "TDeckProDisplay.h"
+  #include "TDeckProBattery.h"
+  extern bool tdeck_pro_lcd_started;
+#endif
 
-    // Button and rotation
-    #define TFT_BUTTON_PIN 0  // Boot button on T-Display S3
-    uint8_t tft_rotation = 1; // 0,1,2,3 = 4 orientations
+#if defined(DISPLAY_ST7789) || defined(DISPLAY_GDEQ031T10)
+    #if defined(DISPLAY_GDEQ031T10)
+      #define tft epd
+      #define WHITE       GxEPD_WHITE
+      #define BLACK       GxEPD_BLACK
+      // E-paper: paper-white background, ink-black only (no grey)
+      #define DUCO_GOLD   GxEPD_BLACK
+      #define DUCO_GRAY   GxEPD_BLACK
+      #define DUCO_DARK   GxEPD_BLACK
+      #define DUCO_GREEN  GxEPD_BLACK
+      #define DUCO_CYAN   GxEPD_BLACK
+    #else
+      #define WHITE       TFT_WHITE
+      #define BLACK       TFT_BLACK
+      #define DUCO_GOLD   0xFD20
+      #define DUCO_GRAY   0x7BEF
+      #define DUCO_DARK   0x39E7
+      #define DUCO_GREEN  0x07E0
+      #define DUCO_CYAN   0x07FF
+    #endif
+
+    // Define colors
+    #define TFT_BUTTON_PIN 0  // Boot button on T-Display S3 / T-Deck Pro
+    #if defined(DISPLAY_GDEQ031T10)
+      uint8_t tft_rotation = 0; // portrait 240x320 on T-Deck Pro e-paper
+    #else
+      uint8_t tft_rotation = 1; // 0,1,2,3 = 4 orientations
+    #endif
     volatile bool tft_rotation_changed = false;
 
     // Interrupt handler - fires instantly on button press
@@ -48,8 +70,16 @@
       for (int i = 0; i < 4; i++) {
         int barH = 6 + i * 5;
         int barY = y + 20 - barH;
-        uint16_t color = (i < bars) ? DUCO_GREEN : DUCO_DARK;
-        tft.fillRect(x + i * 9, barY, 7, barH, color);
+        #if defined(DISPLAY_GDEQ031T10)
+          if (i < bars) {
+            tft.fillRect(x + i * 9, barY, 7, barH, BLACK);
+          } else {
+            tft.drawRect(x + i * 9, barY, 7, barH, BLACK);
+          }
+        #else
+          uint16_t color = (i < bars) ? DUCO_GREEN : DUCO_DARK;
+          tft.fillRect(x + i * 9, barY, 7, barH, color);
+        #endif
       }
     }
 
@@ -82,40 +112,202 @@
 
     // Draw static layout (separators + labels)
     void drawStaticLayout() {
-      tft.fillScreen(BLACK);
-      tft.setTextColor(DUCO_GRAY, BLACK);
+      int w = tft.width();
+      #if defined(DISPLAY_GDEQ031T10)
+        tft.fillScreen(WHITE);
+        tft.setTextColor(BLACK, WHITE);
+      #else
+        tft.fillScreen(BLACK);
+        tft.setTextColor(DUCO_GRAY, BLACK);
+      #endif
 
       if (isLandscape()) {
-        // === LANDSCAPE 320x170 ===
-        tft.drawFastHLine(0, 28, 320, DUCO_DARK);
-        tft.drawFastHLine(0, 105, 320, DUCO_DARK);
-        tft.drawFastHLine(0, 140, 320, DUCO_DARK);
-        tft.drawFastHLine(200, 55, 115, DUCO_DARK);
-        // diff and shr/s labels on right side (static)
+        // === LANDSCAPE ===
+        tft.drawFastHLine(0, 28, w, DUCO_DARK);
+        tft.drawFastHLine(0, 105, w, DUCO_DARK);
+        tft.drawFastHLine(0, 140, w, DUCO_DARK);
+        tft.drawFastHLine(w - 120, 55, 115, DUCO_DARK);
         tft.setTextSize(1);
-        tft.setCursor(280, 40);
+        tft.setCursor(w - 40, 40);
         tft.print("diff");
-        tft.setCursor(274, 65);
+        tft.setCursor(w - 46, 65);
         tft.print("shr/s");
         tft.setCursor(5, 147);
         tft.print("Duino-Coin " + String(SOFTWARE_VERSION));
       } else {
-        // === PORTRAIT 170x320 ===
-        tft.drawFastHLine(0, 28, 170, DUCO_DARK);
-        tft.drawFastHLine(0, 130, 170, DUCO_DARK);
-        tft.drawFastHLine(0, 195, 170, DUCO_DARK);
-        tft.drawFastHLine(0, 255, 170, DUCO_DARK);
-        // kH/s label centered
+        // === PORTRAIT ===
+        tft.drawFastHLine(0, 28, w, DUCO_DARK);
+        tft.drawFastHLine(0, 130, w, DUCO_DARK);
+        tft.drawFastHLine(0, 195, w, DUCO_DARK);
+        tft.drawFastHLine(0, 255, w, DUCO_DARK);
         tft.setTextSize(2);
-        tft.setCursor(55, 100);
+        tft.setCursor((w - 48) / 2, 100);
         tft.print("kH/s");
-        // Bottom version
         tft.setTextSize(1);
         tft.setCursor(5, 262);
         tft.print("Duino-Coin " + String(SOFTWARE_VERSION));
       }
       tft_layout_drawn = true;
     }
+
+    #if defined(DISPLAY_GDEQ031T10)
+    #if defined(LILYGO_T_DECK_PRO)
+    // B&W battery icon for e-paper top bar
+    void drawBatteryIcon(int x, int y, int pct, bool charging) {
+      tft.drawRect(x, y, 18, 9, BLACK);
+      tft.fillRect(x + 18, y + 2, 2, 5, BLACK);
+      int fillW = (pct * 14) / 100;
+      if (fillW > 0) {
+        tft.fillRect(x + 2, y + 2, fillW, 5, BLACK);
+      }
+      if (charging) {
+        tft.drawLine(x + 8, y + 1, x + 10, y + 4, BLACK);
+        tft.drawLine(x + 10, y + 4, x + 8, y + 8, BLACK);
+        tft.drawLine(x + 8, y + 8, x + 10, y + 4, BLACK);
+        tft.drawLine(x + 10, y + 4, x + 12, y + 1, BLACK);
+      }
+    }
+
+    void drawBatteryTopBar(int w) {
+      int pct = -1;
+      bool charging = false;
+      if (!tdeck_pro_battery_get(pct, charging)) {
+        return;
+      }
+      int iconX = w - 58;
+      drawBatteryIcon(iconX, 8, pct, charging);
+      tft.setTextSize(1);
+      tft.setTextColor(BLACK, WHITE);
+      tft.setCursor(iconX + 22, 10);
+      tft.print(String(pct) + "%");
+    }
+    #endif
+
+    // E-paper mining UI: white background, black ink only
+    void display_mining_epd_portrait(String hashrate, String accepted_shares, String total_shares,
+                                     String uptime, String node, String difficulty, String sharerate,
+                                     String ping, String accept_rate) {
+      int w = tft.width();
+      float hr = hashrate.toFloat();
+
+      tft.fillRect(0, 0, w, 28, WHITE);
+      drawWifiBars(5, 3);
+      tft.setTextColor(BLACK, WHITE);
+      tft.setTextSize(2);
+      tft.setCursor(45, 6);
+      tft.print(ping + "ms  ");
+      #if defined(LILYGO_T_DECK_PRO)
+        drawBatteryTopBar(w);
+      #endif
+
+      tft.fillRect(5, 35, w - 10, 60, WHITE);
+      if (hr < 100.0) {
+        tft.setTextSize(5);
+        tft.setCursor(10, 42);
+      } else {
+        tft.setTextSize(4);
+        tft.setCursor(10, 48);
+      }
+      tft.print(hashrate);
+      // Redraw each cycle (narrow hashrate clear above must not cover this label)
+      tft.setTextSize(2);
+      tft.setCursor((w - 48) / 2, 100);
+      tft.print("kH/s");
+
+      tft.fillRect(0, 132, w, 63, WHITE);
+      tft.setTextSize(2);
+      tft.setCursor(5, 138);
+      tft.print(difficulty);
+      tft.setTextSize(1);
+      tft.setCursor(100, 143);
+      tft.print("diff");
+      tft.setTextSize(2);
+      tft.setCursor(5, 165);
+      tft.print(sharerate);
+      tft.setTextSize(1);
+      tft.setCursor(100, 170);
+      tft.print("shr/s");
+
+      tft.fillRect(0, 197, w, 58, WHITE);
+      drawCheckmark(5, 204);
+      tft.setTextSize(2);
+      tft.setCursor(28, 204);
+      tft.print(accepted_shares + "/" + total_shares + "  ");
+      tft.setTextSize(1);
+      tft.setCursor(28, 228);
+      tft.print("(" + accept_rate + "%)  ");
+      tft.setCursor(5, 243);
+      tft.print(node + "   ");
+
+      tft.fillRect(0, 257, w, 63, WHITE);
+      tft.setTextSize(1);
+      tft.setCursor(5, 262);
+      tft.print("Duino-Coin " + String(SOFTWARE_VERSION));
+      tft.setCursor(5, 275);
+      tft.print(WiFi.localIP().toString() + "   ");
+      tft.setTextSize(2);
+      int uptimeW = uptime.length() * 12;
+      tft.setCursor(w - 5 - uptimeW, 295);
+      tft.print(uptime);
+    }
+
+    void display_mining_epd_landscape(String hashrate, String accepted_shares, String total_shares,
+                                      String uptime, String node, String difficulty, String sharerate,
+                                      String ping, String accept_rate) {
+      int w = tft.width();
+
+      drawWifiBars(5, 3);
+      tft.setTextColor(BLACK, WHITE);
+      tft.setTextSize(2);
+      tft.setCursor(45, 6);
+      tft.print(ping + "ms   ");
+      #if defined(LILYGO_T_DECK_PRO)
+        drawBatteryTopBar(w);
+      #endif
+      tft.setTextSize(1);
+      tft.setCursor(140, 10);
+      tft.print(node + "   ");
+
+      tft.fillRect(5, 35, 125, 40, WHITE);
+      if (hashrate.toFloat() < 100.0) {
+        tft.setTextSize(4);
+        tft.setCursor(5, 40);
+      } else {
+        tft.setTextSize(3);
+        tft.setCursor(5, 45);
+      }
+      tft.print(hashrate);
+      tft.setTextSize(2);
+      tft.setCursor(135, 45);
+      tft.print("kH/s");
+
+      tft.fillRect(w - 115, 35, 70, 16, WHITE);
+      tft.fillRect(w - 115, 62, 70, 16, WHITE);
+      tft.setTextSize(2);
+      tft.setCursor(w - 110, 35);
+      tft.print(difficulty);
+      tft.setCursor(w - 110, 62);
+      tft.print(sharerate);
+
+      tft.fillRect(3, 110, 20, 18, WHITE);
+      drawCheckmark(5, 112);
+      tft.setTextSize(2);
+      tft.setCursor(28, 112);
+      tft.print(accepted_shares + "/" + total_shares + "  ");
+      tft.setTextSize(1);
+      tft.setCursor(w - 105, 118);
+      tft.print("(" + accept_rate + "%)  ");
+
+      tft.setTextSize(1);
+      tft.setCursor(5, 158);
+      tft.print(WiFi.localIP().toString() + "   ");
+      tft.fillRect(w - 160, 145, 160, 20, WHITE);
+      tft.setTextSize(2);
+      int uptimeW = uptime.length() * 12;
+      tft.setCursor(w - 5 - uptimeW, 148);
+      tft.print(uptime);
+    }
+    #endif
 #endif
 
 #if defined(LILYGO_T_DECK) && defined(DISPLAY_ST7789)
@@ -460,7 +652,7 @@
     }
 #endif
 
-#if defined(DISPLAY_SSD1306) || defined(DISPLAY_16X2) || defined(DISPLAY_ST7789) || defined(DISPLAY_ST7735) || defined(DISPLAY_GC9A01)
+#if defined(DISPLAY_SSD1306) || defined(DISPLAY_16X2) || defined(DISPLAY_ST7789) || defined(DISPLAY_ST7735) || defined(DISPLAY_GC9A01) || defined(DISPLAY_GDEQ031T10)
     void screen_setup() {
       // Ran during setup()
       // Abstraction layer: screen initialization
@@ -509,7 +701,21 @@
         #endif
       #endif
 
-      #if defined(DISPLAY_ST7789) && !defined(LILYGO_T_DECK)
+      #if defined(DISPLAY_GDEQ031T10) && defined(LILYGO_T_DECK_PRO)
+        #if defined(SERIAL_PRINTING)
+          Serial.println("EPD: T-Deck Pro init...");
+          Serial.flush();
+        #endif
+        pinMode(TFT_BUTTON_PIN, INPUT_PULLUP);
+        attachInterrupt(digitalPinToInterrupt(TFT_BUTTON_PIN), buttonISR, FALLING);
+        tdeck_pro_display_init(epd, tft_rotation);
+        #if defined(SERIAL_PRINTING)
+          Serial.println("EPD: T-Deck Pro init OK");
+          Serial.flush();
+        #endif
+      #endif
+
+      #if defined(DISPLAY_ST7789) && !defined(LILYGO_T_DECK) && !defined(LILYGO_T_DECK_PRO)
         pinMode(TFT_BUTTON_PIN, INPUT_PULLUP);
         attachInterrupt(digitalPinToInterrupt(TFT_BUTTON_PIN), buttonISR, FALLING);
         tft.begin();
@@ -569,6 +775,10 @@
 
     void display_boot() {
       // Abstraction layer: compilation time, features, etc.
+
+      #if defined(LILYGO_T_DECK_PRO) && defined(DISPLAY_GDEQ031T10)
+        if (!tdeck_pro_lcd_started) return;
+      #endif
 
       #if defined(DISPLAY_ST7735)
           st7735_clear_screen();
@@ -726,7 +936,71 @@
           u8g2.sendBuffer();
       #endif
 
-      #if defined(DISPLAY_ST7789)
+      #if defined(DISPLAY_ST7789) || defined(DISPLAY_GDEQ031T10)
+        #if defined(DISPLAY_GDEQ031T10)
+          tft.fillScreen(WHITE);
+          tft_layout_drawn = false;
+          int sw = tft.width();
+          bool landscape = isLandscape();
+
+          tft.setTextColor(BLACK, WHITE);
+          tft.setTextSize(landscape ? 3 : 2);
+          tft.setCursor(10, 15);
+          #if defined(ESP8266)
+            tft.print("ESP8266 ");
+          #elif defined(CONFIG_FREERTOS_UNICORE)
+            tft.print("ESP32S2/C3 ");
+          #else
+            tft.print("ESP32 ");
+          #endif
+          #if defined(ESP8266)
+            tft.print(String(ESP.getCpuFreqMHz()).c_str());
+          #else
+            tft.print(String(getCpuFrequencyMhz()).c_str());
+          #endif
+          tft.print(" MHz");
+
+          tft.drawFastHLine(10, landscape ? 50 : 45, sw - 20, BLACK);
+
+          tft.setTextSize(landscape ? 2 : 1);
+          tft.setCursor(10, landscape ? 60 : 55);
+          tft.print("Compiled ");
+          tft.print(__DATE__);
+
+          tft.setTextSize(landscape ? 2 : 1);
+          tft.setCursor(10, landscape ? 90 : 75);
+          tft.print("Features:");
+          tft.setTextSize(1);
+          tft.setCursor(10, landscape ? 115 : 95);
+          String features_str = "OTA ";
+          #if defined(USE_LAN)
+            features_str += "LAN ";
+          #endif
+          #if defined(LED_BLINKING)
+            features_str += "Blink ";
+          #endif
+          #if defined(SERIAL_PRINTING)
+            features_str += "Serial ";
+          #endif
+          #if defined(WEB_DASHBOARD)
+            features_str += "Webserver ";
+          #endif
+          features_str += "EPD ";
+          #if defined(USE_INTERNAL_SENSOR)
+            features_str += "Int.sensor ";
+          #endif
+          #if defined(USE_DS18B20)
+            features_str += "DS18B20 ";
+          #endif
+          #if defined(USE_DHT)
+            features_str += "DHT ";
+          #endif
+          #if defined(USE_HSU07M)
+            features_str += "HSU07M ";
+          #endif
+          tft.print(features_str);
+          tdeck_pro_epd_flush_full(epd);
+        #else
           tft.fillScreen(BLACK);
           tft_layout_drawn = false;
           int sw = tft.width();
@@ -797,11 +1071,17 @@
             features_str += "HSU07M ";
           #endif
           tft.print(features_str);
+        #endif
       #endif
     }
 
     void display_info(String message) {
       // Abstraction layer: info screens (setups)
+
+      #if defined(LILYGO_T_DECK_PRO) && defined(DISPLAY_GDEQ031T10)
+        if (!tdeck_pro_lcd_started) return;
+        if (!tdeck_pro_epd_rate_limit(2000)) return;
+      #endif
 
       #if defined(DISPLAY_ST7735)
           st7735_clear_screen();
@@ -888,7 +1168,45 @@
           lcd.print(message);
       #endif
 
-      #if defined(DISPLAY_ST7789)
+      #if defined(DISPLAY_ST7789) || defined(DISPLAY_GDEQ031T10)
+        #if defined(DISPLAY_GDEQ031T10)
+          tft.fillScreen(WHITE);
+          tft_layout_drawn = false;
+          int sw = tft.width();
+          bool landscape = isLandscape();
+
+          tft.setTextColor(BLACK, WHITE);
+          tft.setTextSize(landscape ? 3 : 2);
+          tft.setCursor(landscape ? 50 : 10, 10);
+          tft.print("Duino-Coin");
+
+          tft.setTextSize(landscape ? 3 : 2);
+          tft.setCursor(landscape ? 50 : 10, landscape ? 45 : 40);
+          #if defined(ESP8266)
+            tft.print("ESP8266");
+          #elif defined(CONFIG_FREERTOS_UNICORE)
+            tft.print("ESP32S2/C3");
+          #else
+            tft.print("ESP32");
+          #endif
+
+          tft.setTextSize(2);
+          tft.setCursor(landscape ? 230 : 100, landscape ? 50 : 45);
+          tft.print("MINER");
+
+          tft.setTextSize(1);
+          tft.setCursor(landscape ? 280 : 10, landscape ? 70 : 70);
+          tft.print("v");
+          tft.print(String(SOFTWARE_VERSION).c_str());
+
+          tft.setCursor(landscape ? 50 : 10, landscape ? 85 : 85);
+          tft.print("www.duinocoin.com");
+
+          tft.setTextSize(2);
+          tft.setCursor(10, landscape ? 130 : 110);
+          tft.print(message);
+          tdeck_pro_epd_flush_full(epd);
+        #else
           tft.fillScreen(BLACK);
           tft_layout_drawn = false;
           int sw = tft.width();
@@ -937,6 +1255,7 @@
           tft.setTextSize(2);
           tft.setCursor(10, landscape ? 130 : 110);
           tft.print(message);
+        #endif
       #endif
     }
 
@@ -1176,7 +1495,24 @@
           lcd.print("s");
       #endif
 
-      #if defined(DISPLAY_ST7789)
+      #if defined(DISPLAY_ST7789) || defined(DISPLAY_GDEQ031T10)
+          #if defined(DISPLAY_GDEQ031T10)
+            if (!tdeck_pro_lcd_started) return;
+            if (!tdeck_pro_epd_rate_limit(TDECK_PRO_EPD_MIN_MS)) return;
+            if (tft_busy) return;
+            tft_busy = true;
+            checkButton();
+            if (!tft_layout_drawn) drawStaticLayout();
+            if (isLandscape()) {
+              display_mining_epd_landscape(hashrate, accepted_shares, total_shares, uptime, node,
+                                           difficulty, sharerate, ping, accept_rate);
+            } else {
+              display_mining_epd_portrait(hashrate, accepted_shares, total_shares, uptime, node,
+                                          difficulty, sharerate, ping, accept_rate);
+            }
+            tdeck_pro_epd_flush_mining(epd);
+            tft_busy = false;
+          #else
           // Prevent concurrent access from both cores
           if (tft_busy) return;
           tft_busy = true;
@@ -1329,6 +1665,7 @@
           }
 
           tft_busy = false;
+          #endif
       #endif
     }
 
@@ -1336,7 +1673,7 @@
       #if defined(TOUCH_CST816D)
         checkTouch();
       #endif
-      #if defined(DISPLAY_ST7789) || defined(DISPLAY_ST7735) || defined(DISPLAY_GC9A01)
+      #if defined(DISPLAY_ST7789) || defined(DISPLAY_GDEQ031T10) || defined(DISPLAY_ST7735) || defined(DISPLAY_GC9A01)
         checkButton();
       #endif
     }
