@@ -1,6 +1,6 @@
 # Pre-built firmware
 
-Ready-to-flash **merged binaries** for supported boards. Built from `ESP_Code/` with the correct display profile and **WiFiManager captive portal** enabled so you can enter WiFi and Duino-Coin credentials after the first flash — no need to compile unless you want hard-coded settings in `Settings.h`.
+**No `Settings.h` file required.** Ready-to-flash **merged binaries** for supported boards. Built from `ESP_Code/` with the correct display profile and **WiFiManager captive portal** enabled so you can enter WiFi and Duino-Coin credentials after the first flash — no need to compile unless you want hard-coded settings in `Settings.h`.
 
 ## Latest downloads
 
@@ -22,7 +22,9 @@ Each release folder also includes `manifest.json` (build metadata) and `FLASH.tx
    - Duino-Coin username and mining key
 4. The miner saves settings and reboots into normal mining.
 
-To change credentials later, re-flash or build from source with your own `Settings.h` (without `CAPTIVE_PORTAL`).
+To change credentials later, re-flash the release bin or build from source with `sync-device miner` and your own WiFi/user in `Settings.h` (without `CAPTIVE_PORTAL`).
+
+To reproduce release-style builds locally: `bash scripts/build-firmware.sh <board>` or `sync-device.ps1 <id> miner-portal`.
 
 ## Build from source yourself
 

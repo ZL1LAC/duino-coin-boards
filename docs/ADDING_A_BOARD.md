@@ -158,6 +158,8 @@ bash scripts/build-firmware.sh my-new-board
 
 ## 8. Publish firmware (optional)
 
+Release builds use **captive portal** (`CAPTIVE_PORTAL` in `prepare-settings.sh`) — users flash the `.bin` without supplying a `Settings.h`. Do not publish per-user credential binaries.
+
 When `"firmware.enabled": true` in registry:
 
 ```bash

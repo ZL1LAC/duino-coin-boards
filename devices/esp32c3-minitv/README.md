@@ -8,15 +8,23 @@ This firmware is the official Duino-Coin `ESP_Code` fork, set up to mine on the
 Spotpear ESP32-C3 1.44-inch LCD board and show live mining stats on the
 128×128 ST7735 screen.
 
-Copy `ESP_Code/Settings.h.example` → `ESP_Code/Settings.h` and add your Duino-Coin account and WiFi
-(2.4 GHz only on ESP32-C3). Steps below cover Arduino IDE, libraries, TFT_eSPI,
-and upload.
+## Quick start (no compile)
+
+**No `Settings.h` needed** — use the pre-built release binary:
+
+1. Download `esp32c3-minitv-merged-flash.bin` from [GitHub Releases](https://github.com/ZL1LAC/duino-coin-boards/releases)
+2. Flash per [docs/FLASH.md](../../docs/FLASH.md)
+3. Power on → join WiFi **`Duino-Coin`** → captive portal → enter home WiFi (2.4 GHz) + Duino-Coin username/key
+
+## Build from source
+
+Copy `Settings.h.example` → `Settings.h` in this folder, add WiFi + username, then `.\scripts\sync-device.ps1 esp32c3-minitv miner` (or `miner-portal` to skip credentials). Steps below cover Arduino IDE, libraries, TFT_eSPI, and upload.
 
 ---
 
 ## 0. What was changed for this board
 
-- `ESP_Code/Settings.h.example` – enable `#define DISPLAY_ST7735` (disable `DISPLAY_GC9A01`)
+- `devices/esp32c3-minitv/Settings.h.example` – `#define DISPLAY_ST7735`
 - `ESP_Code/DisplayHal.h` – 128×128 ST7735 mining UI
 - `tft_setup.h` (this folder) / `patches/TFT_eSPI/Setup_Spotpear_ESP32C3_144.h` – TFT_eSPI pins
 
@@ -106,7 +114,7 @@ Open the **Tools** menu and set (values from the board's documentation):
 
 ## 5. Open, compile, upload
 
-**Pre-built firmware:** [docs/FLASH.md](../../docs/FLASH.md) — flash `esp32c3-minitv-merged-flash.bin` from [GitHub Releases](https://github.com/ZL1LAC/duino-coin-devices/releases) if you don't want to compile.
+**Pre-built firmware:** [docs/FLASH.md](../../docs/FLASH.md) — flash `esp32c3-minitv-merged-flash.bin` from [GitHub Releases](https://github.com/ZL1LAC/duino-coin-boards/releases) if you don't want to compile.
 
 **From source:**
 

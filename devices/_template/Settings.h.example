@@ -7,6 +7,10 @@ extern char *RIG_IDENTIFIER = "None";
 extern const char SSID[] = "your_wifi_ssid";
 extern const char PASSWORD[] = "your_wifi_password";
 
+// Uncomment to skip hard-coded WiFi/credentials — board opens AP "Duino-Coin" on first boot
+// (same as pre-built release firmware)
+// #define CAPTIVE_PORTAL
+
 #define SERIAL_PRINTING
 #define SERIAL_BAUDRATE 115200
 

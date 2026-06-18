@@ -1,6 +1,6 @@
 # Flash pre-built firmware
 
-How to flash **merged** release binaries from [GitHub Releases](https://github.com/ZL1LAC/duino-coin-devices/releases) or a local `firmware/dist/` build.
+How to flash **merged** release binaries from [GitHub Releases](https://github.com/ZL1LAC/duino-coin-boards/releases) or a local `firmware/dist/` build.
 
 Pick the file for your hardware:
 
@@ -58,11 +58,12 @@ Replace the port and filename for your board.
 
 ## Option C — Arduino IDE (source build)
 
-If you need custom `Settings.h` credentials without captive portal:
+If you need custom credentials compiled in (no captive portal):
 
-1. Copy `ESP_Code/Settings.h.example` → `ESP_Code/Settings.h` and edit.
-2. Follow the board README for TFT_eSPI setup.
-3. Open `ESP_Code/ESP_Code.ino` and upload normally.
+1. Copy `devices/<id>/Settings.h.example` → `devices/<id>/Settings.h` and edit WiFi + username.
+2. `.\scripts\sync-device.ps1 <id> miner` (or `miner-portal` to match release behaviour).
+3. Follow the board README for TFT_eSPI setup.
+4. Open `ESP_Code/ESP_Code.ino` and upload.
 
 ---
 

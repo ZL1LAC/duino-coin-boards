@@ -6,6 +6,12 @@ Board-specific guide for the **ESP32-2424S012** (GC9A01 240×240 round, optional
 
 Mining firmware for the **ESP32-2424S012** board (ESP32-C3 + **GC9A01** 240×240 round IPS, ~37 mm).
 
+## Quick start (no compile)
+
+**No `Settings.h` needed** — flash `esp32c3-round128-merged-flash.bin` from [GitHub Releases](https://github.com/ZL1LAC/duino-coin-boards/releases), then join WiFi **`Duino-Coin`** and use the captive portal. See [docs/FLASH.md](../../docs/FLASH.md).
+
+## Build from source
+
 Uses the **same mining UI as the Spotpear Mini TV** ([ST7735 128×128](../esp32c3-minitv/)), scaled for the round panel. See **[DISPLAYS.md](../../docs/DISPLAYS.md)** for a side-by-side comparison.
 
 ## What you need
@@ -27,7 +33,9 @@ Uses the **same mining UI as the Spotpear Mini TV** ([ST7735 128×128](../esp32c
 
 ## 1. Configure credentials
 
-Edit `ESP_Code/Settings.h`:
+`copy Settings.h.example Settings.h` in this folder, edit, then `.\scripts\sync-device.ps1 esp32c3-round128 miner`.
+
+In `Settings.h`:
 
 ```cpp
 #define DISPLAY_GC9A01   // not DISPLAY_ST7735
@@ -49,7 +57,7 @@ Apply the ESP32-C3 SPI fix from [patches/TFT_eSPI/README.md](../../patches/TFT_e
 
 ## 3. Upload
 
-**Pre-built firmware:** [docs/FLASH.md](../../docs/FLASH.md) — use `esp32c3-round128-merged-flash.bin` from [GitHub Releases](https://github.com/ZL1LAC/duino-coin-devices/releases).
+**Pre-built firmware:** [docs/FLASH.md](../../docs/FLASH.md) — use `esp32c3-round128-merged-flash.bin` from [GitHub Releases](https://github.com/ZL1LAC/duino-coin-boards/releases).
 
 **From source:** open `ESP_Code/ESP_Code.ino`, upload, open Serial Monitor at **115200**, press **RESET**.
 

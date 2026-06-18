@@ -30,26 +30,38 @@ Display comparison (C3 TFT): **[docs/DISPLAYS.md](docs/DISPLAYS.md)**
 
 ## Quick start
 
-### Pre-built binary (ESP32-C3 TFT devices)
+**No `Settings.h`?** Flash a [release binary](firmware/README.md) for the two ESP32-C3 TFT boards — first boot opens WiFi AP **`Duino-Coin`** (captive portal).
 
-See [firmware/README.md](firmware/README.md) and [docs/FLASH.md](docs/FLASH.md).
+| Goal | Path | Settings.h? |
+|------|------|-------------|
+| Fastest (C3 Mini TV / round) | [Flash pre-built `.bin`](docs/FLASH.md) | **No** |
+| Custom code or other boards | Build from source (below) | **Yes** (or use `miner-portal`) |
+
+### Pre-built binary (ESP32-C3 TFT — no compile)
+
+1. Download `*-merged-flash.bin` from [GitHub Releases](https://github.com/ZL1LAC/duino-coin-boards/releases)
+2. Flash per [docs/FLASH.md](docs/FLASH.md)
+3. Join **`Duino-Coin`** WiFi and enter home WiFi + Duino-Coin credentials
+
+See [firmware/README.md](firmware/README.md).
 
 ### Build from source (any device)
 
-1. **Clone** and open the guide for your hardware: **`devices/<id>/README.md`**
+1. **Clone** and open **`devices/<id>/README.md`**
 
 2. **Sync device profile**
    ```powershell
    copy devices\lilygo-t-deck-pro\Settings.h.example devices\lilygo-t-deck-pro\Settings.h
-   # edit WiFi + username in Settings.h
+   # edit WiFi + username — OR use miner-portal to skip credentials:
    .\scripts\sync-device.ps1 lilygo-t-deck-pro miner
+   # .\scripts\sync-device.ps1 lilygo-t-deck-pro miner-portal
    ```
 
-3. **Libraries / TFT setup** — follow the device README (`setup-tft-espi.ps1` for TFT_eSPI boards).
+3. **Libraries / TFT setup** — device README (`setup-tft-espi.ps1` for TFT_eSPI boards)
 
-4. **Upload** — open **`ESP_Code/ESP_Code.ino`** with the Arduino board settings from that README.
+4. **Upload** — **`ESP_Code/ESP_Code.ino`**
 
-For **bring-up**, run generic test first: `sync-device.ps1 <id> test` → [testbench/GenericTest/GenericTest.ino](testbench/GenericTest/GenericTest.ino).
+**Bring-up first:** `sync-device.ps1 <id> test` → [testbench/GenericTest/GenericTest.ino](testbench/GenericTest/GenericTest.ino).
 
 ---
 

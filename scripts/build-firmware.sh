@@ -110,7 +110,11 @@ print(json.dumps({
     "git_ref": tag,
     "fqbn": fqbn,
     "captive_portal": True,
-    "first_run": "Connect to WiFi AP Duino-Coin and enter WiFi + Duino-Coin credentials.",
+    "settings_file_required": False,
+    "first_run": (
+        "No Settings.h needed. Flash this bin, power on, join WiFi AP Duino-Coin, "
+        "enter home WiFi (2.4 GHz) + Duino-Coin username/key in the captive portal."
+    ),
     "flash": {
         "merged_bin": bin_name,
         "esptool_chip": chip,
@@ -132,7 +136,11 @@ Flash the merged binary (full chip image):
 Windows: replace COM_PORT with your port (e.g. COM14).
 Upload speed 115200 if the link is unreliable.
 
-First boot: join WiFi network "Duino-Coin" and enter your home WiFi + Duino-Coin username/key.
+No Settings.h required — first boot:
+  1. Board creates WiFi network "Duino-Coin"
+  2. Connect phone/laptop, open captive portal
+  3. Enter home WiFi (2.4 GHz) + Duino-Coin username and mining key
+  4. Board saves to flash and reboots into mining
 EOF
 
   echo "Built: $merged"
