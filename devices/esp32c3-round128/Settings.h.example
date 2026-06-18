@@ -41,6 +41,12 @@ extern unsigned int ping = 0;
     TFT_eSPI tft = TFT_eSPI();
 #endif
 
+#if defined(TOUCH_CST816D)
+    #include "CST816D.h"
+    CST816D touch(4, 5, 1, 0);
+    void display_input_poll();
+#endif
+
 IPAddress DNS_SERVER(1, 1, 1, 1);
 
 #endif

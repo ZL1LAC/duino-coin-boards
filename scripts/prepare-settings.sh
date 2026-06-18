@@ -6,12 +6,9 @@ set -euo pipefail
 BOARD="${1:?board id required}"
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 OUT="$ROOT/ESP_Code/Settings.h"
-EXAMPLE="$ROOT/devices/$BOARD/Settings.h.example"
-
-if [[ ! -f "$EXAMPLE" ]]; then
-  echo "Missing $EXAMPLE" >&2
-  exit 1
-fi
+# Full miner template (display drivers, touch, blink constants) — device
+# Settings.h.example is for local sync-device builds only.
+EXAMPLE="$ROOT/ESP_Code/Settings.h.example"
 
 cp "$EXAMPLE" "$OUT"
 
@@ -46,4 +43,4 @@ for name in fw.get("defines_disable", []):
 open(path, "w", encoding="utf-8").write(text)
 PY
 
-echo "Wrote $OUT for board: $BOARD (CAPTIVE_PORTAL enabled, from devices/$BOARD/Settings.h.example)"
+echo "Wrote $OUT for board: $BOARD (CAPTIVE_PORTAL enabled)"

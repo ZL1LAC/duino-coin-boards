@@ -8,8 +8,8 @@ Check **[GitHub Releases](https://github.com/ZL1LAC/duino-coin-boards/releases)*
 
 | Board | File | Guide |
 |-------|------|--------|
-| Spotpear ESP32-C3 Mini TV | `esp32c3-minitv-merged-flash.bin` | [devices/esp32c3-minitv](../devices/esp32c3-minitv/) |
-| ESP32-2424S012 round | `esp32c3-round128-merged-flash.bin` | [devices/esp32c3-round128](../devices/esp32c3-round128/) |
+| Spotpear ESP32-C3 Mini TV | `esp32c3-minitv-firmware.bin` | [devices/esp32c3-minitv](../devices/esp32c3-minitv/) |
+| ESP32-2424S012 round | `esp32c3-round128-firmware.bin` | [devices/esp32c3-round128](../devices/esp32c3-round128/) |
 
 Each release folder also includes `manifest.json` (build metadata) and `FLASH.txt` (quick command).
 
@@ -42,12 +42,14 @@ Output lands in `firmware/dist/<board>/`.
 
 ## Publishing a new release (maintainer)
 
+Each device with `firmware.enabled: true` gets its own **`.bin`** attached to the GitHub Release (not source code):
+
 ```bash
-git tag firmware-v1.0.0
-git push origin firmware-v1.0.0
+git tag firmware-v1.0.8
+git push origin firmware-v1.0.8   # must push the tag — triggers CI build + release upload
 ```
 
-GitHub Actions builds every device with `"firmware.enabled": true` in [devices/registry.json](../devices/registry.json) and attaches the binaries to the release.
+GitHub Actions compiles one `*-firmware.bin` per device and attaches them to the release page.
 
 Manual test build without tagging: **Actions → Firmware → Run workflow**.
 

@@ -39,7 +39,7 @@ Display comparison (C3 TFT): **[docs/DISPLAYS.md](docs/DISPLAYS.md)**
 
 ### Pre-built binary (ESP32-C3 TFT — no compile)
 
-1. Download `*-merged-flash.bin` from [GitHub Releases](https://github.com/ZL1LAC/duino-coin-boards/releases)
+1. Download `<device-id>-firmware.bin` from [GitHub Releases](https://github.com/ZL1LAC/duino-coin-boards/releases) (e.g. `esp32c3-minitv-firmware.bin`)
 2. Flash per [docs/FLASH.md](docs/FLASH.md)
 3. Join **`Duino-Coin`** WiFi and enter home WiFi + Duino-Coin credentials
 

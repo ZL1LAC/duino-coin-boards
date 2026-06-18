@@ -8,7 +8,7 @@ Mining firmware for the **ESP32-2424S012** board (ESP32-C3 + **GC9A01** 240×240
 
 ## Quick start (no compile)
 
-**No `Settings.h` needed** — flash `esp32c3-round128-merged-flash.bin` from [GitHub Releases](https://github.com/ZL1LAC/duino-coin-boards/releases), then join WiFi **`Duino-Coin`** and use the captive portal. See [docs/FLASH.md](../../docs/FLASH.md).
+**No `Settings.h` needed** — flash `esp32c3-round128-firmware.bin` from [GitHub Releases](https://github.com/ZL1LAC/duino-coin-boards/releases), then join WiFi **`Duino-Coin`** and use the captive portal. See [docs/FLASH.md](../../docs/FLASH.md).
 
 ## Build from source
 
@@ -57,7 +57,7 @@ Apply the ESP32-C3 SPI fix from [patches/TFT_eSPI/README.md](../../patches/TFT_e
 
 ## 3. Upload
 
-**Pre-built firmware:** [docs/FLASH.md](../../docs/FLASH.md) — use `esp32c3-round128-merged-flash.bin` from [GitHub Releases](https://github.com/ZL1LAC/duino-coin-boards/releases).
+**Pre-built firmware:** [docs/FLASH.md](../../docs/FLASH.md) — use `esp32c3-round128-firmware.bin` from [GitHub Releases](https://github.com/ZL1LAC/duino-coin-boards/releases).
 
 **From source:** open `ESP_Code/ESP_Code.ino`, upload, open Serial Monitor at **115200**, press **RESET**.
 

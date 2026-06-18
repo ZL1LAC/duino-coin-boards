@@ -6,8 +6,8 @@ Pick the file for your hardware:
 
 | Board | Binary |
 |-------|--------|
-| Spotpear ESP32-C3 1.44" Mini TV (ST7735) | `esp32c3-minitv-merged-flash.bin` |
-| ESP32-2424S012 round (GC9A01) | `esp32c3-round128-merged-flash.bin` |
+| Spotpear ESP32-C3 1.44" Mini TV (ST7735) | `esp32c3-minitv-firmware.bin` |
+| ESP32-2424S012 round (GC9A01) | `esp32c3-round128-firmware.bin` |
 
 **Other boards** (T-Deck, T-Deck Pro, Heltec, …): build from source — see [testbench/README.md](../testbench/README.md). No release binary until `firmware.enabled: true` in [devices/registry.json](../devices/registry.json).
 
@@ -26,13 +26,13 @@ pip install esptool
 **Windows (PowerShell):**
 
 ```powershell
-python -m esptool --chip esp32c3 --port COM14 --baud 115200 write_flash 0x0 esp32c3-minitv-merged-flash.bin
+python -m esptool --chip esp32c3 --port COM14 --baud 115200 write_flash 0x0 esp32c3-minitv-firmware.bin
 ```
 
 **macOS / Linux:**
 
 ```bash
-python3 -m esptool --chip esp32c3 --port /dev/ttyUSB0 --baud 115200 write_flash 0x0 esp32c3-minitv-merged-flash.bin
+python3 -m esptool --chip esp32c3 --port /dev/ttyUSB0 --baud 115200 write_flash 0x0 esp32c3-minitv-firmware.bin
 ```
 
 Replace the port and filename for your board.

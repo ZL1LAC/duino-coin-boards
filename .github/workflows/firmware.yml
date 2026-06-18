@@ -53,14 +53,20 @@ jobs:
           chmod +x scripts/*.sh
           bash scripts/build-firmware.sh "${{ matrix.board }}"
 
+      - name: Stage release files for ${{ matrix.board }}
+        run: |
+          dist="firmware/dist/${{ matrix.board }}"
+          out="release-assets/${{ matrix.board }}"
+          mkdir -p "$out"
+          cp "$dist"/*-merged-flash.bin "$out/${{ matrix.board }}-firmware.bin"
+          cp "$dist/manifest.json" "$out/"
+          cp "$dist/FLASH.txt" "$out/"
+
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: firmware-${{ matrix.board }}
-          path: |
-            firmware/dist/${{ matrix.board }}/*-merged-flash.bin
-            firmware/dist/${{ matrix.board }}/manifest.json
-            firmware/dist/${{ matrix.board }}/FLASH.txt
+          path: release-assets/${{ matrix.board }}/
 
   release:
     if: startsWith(github.ref, 'refs/tags/firmware-v')
@@ -73,9 +79,25 @@ jobs:
           pattern: firmware-*
           merge-multiple: true
 
+      - name: Flatten release assets
+        run: |
+          mkdir -p release
+          find artifacts -type f \( -name '*-firmware.bin' -o -name 'manifest.json' -o -name 'FLASH.txt' \) -exec cp {} release/ \;
+          ls -la release/
+
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: |
-            artifacts/**/*
-          generate_release_notes: true
+          tag_name: ${{ github.ref_name }}
+          name: Firmware ${{ github.ref_name }}
+          body: |
+            Pre-built flash images — **no Settings.h required** (captive portal on first boot).
+
+            | Device | Flash this file |
+            |--------|-----------------|
+            | Spotpear ESP32-C3 Mini TV | `esp32c3-minitv-firmware.bin` |
+            | ESP32-2424S012 round | `esp32c3-round128-firmware.bin` |
+
+            Flash at address **0x0** — see `FLASH.txt` in the assets or [docs/FLASH.md](https://github.com/${{ github.repository }}/blob/master/docs/FLASH.md).
+          files: release/*
+          generate_release_notes: false

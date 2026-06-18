@@ -12,7 +12,7 @@ Spotpear ESP32-C3 1.44-inch LCD board and show live mining stats on the
 
 **No `Settings.h` needed** — use the pre-built release binary:
 
-1. Download `esp32c3-minitv-merged-flash.bin` from [GitHub Releases](https://github.com/ZL1LAC/duino-coin-boards/releases)
+1. Download `esp32c3-minitv-firmware.bin` from [GitHub Releases](https://github.com/ZL1LAC/duino-coin-boards/releases)
 2. Flash per [docs/FLASH.md](../../docs/FLASH.md)
 3. Power on → join WiFi **`Duino-Coin`** → captive portal → enter home WiFi (2.4 GHz) + Duino-Coin username/key
 
@@ -114,7 +114,7 @@ Open the **Tools** menu and set (values from the board's documentation):
 
 ## 5. Open, compile, upload
 
-**Pre-built firmware:** [docs/FLASH.md](../../docs/FLASH.md) — flash `esp32c3-minitv-merged-flash.bin` from [GitHub Releases](https://github.com/ZL1LAC/duino-coin-boards/releases) if you don't want to compile.
+**Pre-built firmware:** [docs/FLASH.md](../../docs/FLASH.md) — flash `esp32c3-minitv-firmware.bin` from [GitHub Releases](https://github.com/ZL1LAC/duino-coin-boards/releases) if you don't want to compile.
 
 **From source:**
 
